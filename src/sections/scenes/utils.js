@@ -67,17 +67,19 @@ const loadImage = async (file) =>
 
 export const generateMindFile = async (compiler, files) => {
   const images = [];
+  console.log('files', files);
   for (let i = 0; i < files.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
     images.push(await loadImage(files[i]));
   }
+  console.log('images', images);
   const _start = new Date().getTime();
   const dataList = await compiler.compileImageTargets(images, (progress) => {
     console.log('progress', progress);
   });
   console.log('exec time compile: ', new Date().getTime() - _start);
   for (let i = 0; i < dataList.length; i += 1) {
-    console.log(dataList[i]);
+    console.log('datalist', dataList[i]);
   }
   const exportedBuffer = await compiler.exportData();
 
@@ -102,13 +104,13 @@ export const downloadImages = async (urls) => {
     images.push(file);
   });
 
-  Promise.all(fetchPromise)
+  await Promise.all(fetchPromise)
     .then(() => {
       console.log('All images downloaded');
-      return images;
     })
     .catch((err) => {
       console.log('Error downloading images', err);
-      return [];
     });
+
+  return images;
 };

@@ -21,6 +21,7 @@ export const AllContentsPage = lazy(() => import('src/pages/contents/all-content
 // Scene pages
 export const AllScenesPage = lazy(() => import('src/pages/scenes/all-scenes'));
 export const NewScenePage = lazy(() => import('src/pages/scenes/new-scene'));
+export const PublicScenePage = lazy(() => import('src/pages/scenes/public-scene'));
 
 // Test pages
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -63,7 +64,7 @@ export default function Router() {
             // { path: 'scenes/new', element: <NewScenePage /> },
             {
               path: 'scenes', children: [
-                { element: <AllScenesPage />, index: true},
+                { element: <AllScenesPage />, index: true },
                 { path: 'new', element: <NewScenePage /> },
               ]
             },
@@ -71,6 +72,8 @@ export default function Router() {
             { path: 'blog', element: <BlogPage /> },
           ]
         },
+        // path with username and scene id
+        { path: '/:authorName/:sceneName', element: <PublicScenePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" replace /> },

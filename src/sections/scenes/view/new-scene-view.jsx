@@ -37,7 +37,7 @@ const showSelectedImage = (selectedImage) => (
     />
 );
 
-export default function NewScenePage() {
+const NewScenePage = () => {
     const router = useRouter();
     const { createScene } = useApi();
 
@@ -57,10 +57,14 @@ export default function NewScenePage() {
         console.log('Submitting scene', scenes);
         // Generate mind file
         setStatusMsg('Generating .mind file...');
-        const imageFiles = downloadImages(
+        console.log('Scenes', scenes);
+        const imageFiles = await downloadImages(
             scenes.map((scene) => scene.target.targetImage)
         );
+        console.log('Image files', imageFiles);
         const mindFile = await generateMindFile(new Compiler(), imageFiles);
+
+        console.log('Mind file', mindFile);
 
         // Upload mind file
         setStatusMsg('Uploading scene...');
@@ -100,6 +104,7 @@ export default function NewScenePage() {
                     Submit
                 </Button>
             </Stack>
+            {statusMsg && <Typography variant="body1">{statusMsg}</Typography>}
             <NewSceneDialog open={isDialogOpen} setOpen={setIsDialogOpen} addScene={handleAddScene} />
             <Stack pb={3}>
                 <TextField
@@ -153,3 +158,5 @@ export default function NewScenePage() {
         </Container>
     );
 }
+
+export default NewScenePage;

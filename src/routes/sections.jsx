@@ -14,6 +14,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // Target pages
 export const AllTargetsPage = lazy(() => import('src/pages/targets/all-targets'));
+export const NewTargetPage = lazy(() => import('src/pages/targets/new-target'));
 
 // Content pages
 export const AllContentsPage = lazy(() => import('src/pages/contents/all-contents'));
@@ -58,10 +59,16 @@ export default function Router() {
           , children: [
             { path: '/', element: <IndexPage /> },
             { path: 'user', element: <UserPage /> },
-            { path: 'targets', element: <AllTargetsPage /> },
+            // { path: 'targets', element: <AllTargetsPage /> },
             { path: 'contents', element: <AllContentsPage /> },
             // { path: 'scenes', element: <AllScenesPage /> },
             // { path: 'scenes/new', element: <NewScenePage /> },
+            {
+              path: 'targets', children: [
+                { element: <AllTargetsPage />, index: true },
+                { path: 'new', element: <NewTargetPage /> },
+              ]
+            },
             {
               path: 'scenes', children: [
                 { element: <AllScenesPage />, index: true },

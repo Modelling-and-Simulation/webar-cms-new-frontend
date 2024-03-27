@@ -9,6 +9,7 @@ const useApi = () => {
 
   // Targets
   const getAllTargets = () => axiosPrivate.get('/targets');
+  const createTarget = (data) => axiosPrivate.post('/targets', data);
 
   // Contents
   const getAllContents = () => axiosPrivate.get('/contents');
@@ -22,6 +23,7 @@ const useApi = () => {
     loginApi,
     logoutApi,
     getAllTargets,
+    createTarget,
     getAllContents,
     createScene,
     getAllScenes,

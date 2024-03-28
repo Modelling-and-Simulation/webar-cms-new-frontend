@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { toast } from "react-toastify";
+import { useState, useEffect } from 'react';
+import { toast, ToastContainer } from "react-toastify";
 import { Compiler } from "mind-ar/dist/mindar-image.prod";
 
 import Stack from '@mui/material/Stack';
@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'src/routes/hooks';
 
 import useApi from 'src/hooks/useApi';
+import useAuth from "src/hooks/useAuth";
 
 import { FILES_URL } from 'src/constants';
 
@@ -39,14 +40,23 @@ const showSelectedImage = (selectedImage) => (
 
 const NewScenePage = () => {
     const router = useRouter();
+    const auth = useAuth();
     const { createScene } = useApi();
 
     const [sceneName, setSceneName] = useState('');
+    const [sceneUrl, setSceneUrl] = useState('');
     const [description, setDescription] = useState('');
 
     const [scenes, setScenes] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [statusMsg, setStatusMsg] = useState('');
+
+    useEffect(() => {
+        // remove special characters. replace spaces with hyphen
+        const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
+        if (url) setSceneUrl(url);
+        else setSceneUrl('');
+    }, [auth?.auth?.username, sceneName]);
 
     const handleAddScene = (scene) => {
         setScenes([...scenes, scene]);
@@ -54,7 +64,6 @@ const NewScenePage = () => {
     };
 
     const handleSubmit = async () => {
-        console.log('Submitting scene', scenes);
         // Generate mind file
         setStatusMsg('Generating .mind file...');
         console.log('Scenes', scenes);
@@ -70,7 +79,7 @@ const NewScenePage = () => {
         setStatusMsg('Uploading scene...');
         const formData = new FormData();
         formData.append('mindFile', mindFile);
-        formData.append('sceneName', sceneName);
+        formData.append('sceneName', sceneUrl);
         formData.append('description', description);
         formData.append('targetsAndContents', JSON.stringify(scenes.map((scene) => ({
             target: scene.target._id,
@@ -91,6 +100,7 @@ const NewScenePage = () => {
 
     return (
         <Container>
+            <ToastContainer />
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <Typography variant="h4">New Scene</Typography>
 
@@ -112,7 +122,8 @@ const NewScenePage = () => {
                     label="Enter scene name"
                     onChange={(e) => setSceneName(e.target.value)}
                     value={sceneName} />
-                <Typography variant='caption' pl={1}>(This name is used to access the scene by public users)</Typography>
+                {sceneUrl && <Typography variant='caption' pl={1} color="green">URL: {`${auth?.auth?.username}/${sceneUrl}`}</Typography>}
+                <Typography variant='caption' pl={1}>(This name will be used in the URL)</Typography>
 
                 <TextField
                     name="description"

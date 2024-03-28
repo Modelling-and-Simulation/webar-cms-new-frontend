@@ -83,17 +83,22 @@ const NewTargetPage = () => {
                     value={description}
                     sx={{ mt: 3 }} />
                 
-                {/* <label htmlFor="upload-file"> */}
-                    <Button component="span" variant="outlined" sx={{ mt: 3 }}>
-                        Choose File
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
+                    <Button
+                        variant="outlined"
+                        sx={{ width: '12vw', marginRight: '1rem' }}
+                        onClick={() => document.getElementById('upload-file').click()}
+                    >
+                        Choose Target File
                     </Button>
-                    <input
-                        id="upload-file"
-                        type="file"
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                    />
-                {/* </label> */}
+                    {selectedFile && <Typography>{selectedFile.name}</Typography>}
+                </div>
+                <input
+                    id="upload-file"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                />
 
             </Stack>
 

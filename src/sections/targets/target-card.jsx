@@ -45,9 +45,11 @@ export default function TargetCard({ target }) {
   return (
     <Card>
       <Link color="inherit" underline="hover" variant="subtitle2" noWrap>
-        <Box sx={{ pt: '100%', position: 'relative' }}>
+        <Box sx={{ pt: '100%', position: 'relative' }} onMouseOver={console.log('entered')}
+      onMouseLeave={console.log('left')}>
           {target.status && renderStatus}
           {renderImg}
+          {console.log('hi')}
         </Box>
 
         <Stack spacing={2} sx={{ px: 2, pt: 2 }}>

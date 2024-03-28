@@ -13,6 +13,7 @@ const useApi = () => {
 
   // Contents
   const getAllContents = () => axiosPrivate.get('/contents');
+  const createContent = (data) => axiosPrivate.post('/contents', data);
 
   // Scenes
   const createScene = (data) => axiosPrivate.post('/scenes', data);
@@ -25,6 +26,7 @@ const useApi = () => {
     getAllTargets,
     createTarget,
     getAllContents,
+    createContent,
     createScene,
     getAllScenes,
     getSceneByUrl,

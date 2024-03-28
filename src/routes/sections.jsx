@@ -18,6 +18,7 @@ export const NewTargetPage = lazy(() => import('src/pages/targets/new-target'));
 
 // Content pages
 export const AllContentsPage = lazy(() => import('src/pages/contents/all-contents'));
+export const NewContentPage = lazy(() => import('src/pages/contents/new-content'));
 
 // Scene pages
 export const AllScenesPage = lazy(() => import('src/pages/scenes/all-scenes'));
@@ -60,9 +61,15 @@ export default function Router() {
             { path: '/', element: <IndexPage /> },
             { path: 'user', element: <UserPage /> },
             // { path: 'targets', element: <AllTargetsPage /> },
-            { path: 'contents', element: <AllContentsPage /> },
+            // { path: 'contents', element: <AllContentsPage /> },
             // { path: 'scenes', element: <AllScenesPage /> },
             // { path: 'scenes/new', element: <NewScenePage /> },
+            {
+              path: 'contents', children: [
+                { element: <AllContentsPage />, index: true },
+                { path: 'new', element: <NewContentPage /> },
+              ]
+            },
             {
               path: 'targets', children: [
                 { element: <AllTargetsPage />, index: true },

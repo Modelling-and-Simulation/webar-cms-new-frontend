@@ -13,7 +13,7 @@ const RequireAuth = ({ allowedRoles }) => {
     if (allowedRoles?.includes(auth?.roleName)) {
         content = <Outlet />;
     } else if (auth?.accessToken) {
-        content = <Navigate to="/unauthorized" state={{ from: location }} replace />;
+        content = <Navigate to={`${ASSETS_URL}/unauthorized`} state={{ from: location }} replace />;
     } else {
         content = <Navigate to={`${ASSETS_URL}/login`} state={{ from: location }} replace />;
     }

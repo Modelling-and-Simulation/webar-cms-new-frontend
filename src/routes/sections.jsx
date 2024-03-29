@@ -12,6 +12,7 @@ import PersistLogin from 'src/components/auth/PersistLogin';
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const Page403 = lazy(() => import('src/pages/unauthorized'));
 
 // Target pages
 export const AllTargetsPage = lazy(() => import('src/pages/targets/all-targets'));
@@ -88,6 +89,7 @@ export default function Router() {
         { path: ':authorName/:sceneName', element: <PublicScenePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
+        { path: 'unauthorized', element: <Page403 /> },
         { path: '*', element: <Navigate to={`${ASSETS_URL}/404`} replace /> },
       ],
     },

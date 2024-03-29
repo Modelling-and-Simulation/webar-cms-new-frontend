@@ -8,10 +8,11 @@ import { RouterLink } from 'src/routes/components';
 import { ASSETS_URL } from 'src/constants';
 
 import Logo from 'src/components/logo';
+import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function NotFoundView() {
+export default function UnauthorizedView() {
   const renderHeader = (
     <Box
       component="header"
@@ -47,25 +48,16 @@ export default function NotFoundView() {
           }}
         >
           <Typography variant="h3" sx={{ mb: 3 }}>
-            Sorry, page not found!
+            Sorry, you are not authorized!
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
-            sure to check your spelling.
+            Sorry, you are not authorized to access this page. Please contact the administrator if you think this is a mistake. Thank you.
           </Typography>
 
-          <Box
-            component="img"
-            src={`${ASSETS_URL}/assets/illustrations/illustration_404.svg`}
-            sx={{
-              mx: 'auto',
-              height: 260,
-              my: { xs: 5, sm: 10 },
-            }}
-          />
+          <Iconify icon="material-symbols:lock" color="primary" sx={{ my: 5, width: 80, height: 80 }} />
 
-          <Button href={`${ASSETS_URL}/`} size="large" variant="contained" component={RouterLink}>
+          <Button href={`${ASSETS_URL}/login`} size="large" variant="contained" component={RouterLink}>
             Go to Home
           </Button>
         </Box>

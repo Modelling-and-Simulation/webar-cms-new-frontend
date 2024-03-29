@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
+import { ASSETS_URL } from 'src/constants';
+
 import Logo from 'src/components/logo';
 
 // ----------------------------------------------------------------------
@@ -55,7 +57,7 @@ export default function NotFoundView() {
 
           <Box
             component="img"
-            src="/assets/illustrations/illustration_404.svg"
+            src={`${ASSETS_URL}/assets/illustrations/illustration_404.svg`}
             sx={{
               mx: 'auto',
               height: 260,

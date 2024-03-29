@@ -20,6 +20,7 @@ import useApi from 'src/hooks/useApi';
 import useAuth from 'src/hooks/useAuth';
 
 import { bgGradient } from 'src/theme/css';
+import { ASSETS_URL } from 'src/constants';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -144,7 +145,7 @@ export default function LoginView() {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
+          imgUrl: `${ASSETS_URL}/assets/background/overlay_4.jpg`,
         }),
         height: 1,
       }}

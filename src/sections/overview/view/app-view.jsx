@@ -4,6 +4,8 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import { ASSETS_URL } from 'src/constants';
+
 import Iconify from 'src/components/iconify';
 
 import AppTasks from '../app-tasks';
@@ -22,7 +24,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        Hi, Welcome backa 👋
       </Typography>
 
       <Grid container spacing={3}>
@@ -31,7 +33,7 @@ export default function AppView() {
             title="Weekly Sales"
             total={714000}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_bag.png`} />}
           />
         </Grid>
 
@@ -40,7 +42,7 @@ export default function AppView() {
             title="New Users"
             total={1352831}
             color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_users.png`} />}
           />
         </Grid>
 
@@ -49,7 +51,7 @@ export default function AppView() {
             title="Item Orders"
             total={1723315}
             color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+            icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_buy.png`} />}
           />
         </Grid>
 
@@ -58,7 +60,7 @@ export default function AppView() {
             title="Bug Reports"
             total={234}
             color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+            icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_message.png`} />}
           />
         </Grid>
 
@@ -160,7 +162,7 @@ export default function AppView() {
               id: faker.string.uuid(),
               title: faker.person.jobTitle(),
               description: faker.commerce.productDescription(),
-              image: `/assets/images/covers/cover_${index + 1}.jpg`,
+              image: `${ASSETS_URL}/assets/images/covers/cover_${index + 1}.jpg`,
               postedAt: faker.date.recent(),
             }))}
           />

@@ -14,7 +14,7 @@ import { useRouter } from 'src/routes/hooks';
 import useAuth from 'src/hooks/useAuth';
 import useLogout from 'src/hooks/useLogout';
 
-import { account } from 'src/_mock/account';
+import { ASSETS_URL } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +70,7 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={account.photoURL}
+          src={`${ASSETS_URL}/assets/images/avatars/avatar_25.jpg`}
           alt={auth?.auth?.username}
           sx={{
             width: 36,

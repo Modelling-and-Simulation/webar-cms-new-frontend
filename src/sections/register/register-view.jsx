@@ -15,6 +15,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
+import { ASSETS_URL } from 'src/constants';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -77,7 +78,7 @@ export default function RegisterView() {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
+          imgUrl: `${ASSETS_URL}/assets/background/overlay_4.jpg`,
         }),
         height: 1,
       }}

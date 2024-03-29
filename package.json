@@ -2,6 +2,7 @@
   "name": "ucsc-cms",
   "licence": "MIT",
   "version": "1.8.0",
+  "homepage": "https://modelling-and-simulation.github.io/webar-cms-new-frontend",
   "private": false,
   "scripts": {
     "dev": "vite",

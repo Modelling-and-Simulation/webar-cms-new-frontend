@@ -145,7 +145,7 @@ function NavItem({ item }) {
   return (
     <ListItemButton
       component={RouterLink}
-      href={item.path}
+      href={`${ASSETS_URL}${item.path}`}
       sx={{
         minHeight: 44,
         borderRadius: 0.75,

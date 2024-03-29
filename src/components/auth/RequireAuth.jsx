@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 
+import { ASSETS_URL } from 'src/constants';
+
 import useAuth from "../../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
@@ -13,7 +15,7 @@ const RequireAuth = ({ allowedRoles }) => {
     } else if (auth?.accessToken) {
         content = <Navigate to="/unauthorized" state={{ from: location }} replace />;
     } else {
-        content = <Navigate to="/login" state={{ from: location }} replace />;
+        content = <Navigate to={`${ASSETS_URL}/login`} state={{ from: location }} replace />;
     }
 
     return content;

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ASSETS_URL } from 'src/constants';
+
 // ----------------------------------------------------------------------
 
 export function useRouter() {
@@ -11,8 +13,8 @@ export function useRouter() {
       back: () => navigate(-1),
       forward: () => navigate(1),
       reload: () => window.location.reload(),
-      push: (href) => navigate(href),
-      replace: (href) => navigate(href, { replace: true }),
+      push: (href) => navigate(`${ASSETS_URL}${href}`),
+      replace: (href) => navigate(`${ASSETS_URL}${href}`, { replace: true }),
     }),
     [navigate]
   );

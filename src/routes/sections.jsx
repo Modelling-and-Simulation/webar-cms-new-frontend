@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import { ASSETS_URL } from 'src/constants';
 import DashboardLayout from 'src/layouts/dashboard';
 import { AuthProvider } from 'src/context/AuthProvider';
 
@@ -42,6 +43,7 @@ const ROLES = {
 export default function Router() {
   const routes = useRoutes([
     {
+      path: `${ASSETS_URL}`,
       element: (
         <AuthProvider>
           <PersistLogin>
@@ -58,12 +60,8 @@ export default function Router() {
               <RequireAuth allowedRoles={[ROLES.RegisteredUser]} />
             </DashboardLayout>
           , children: [
-            { path: '/', element: <IndexPage /> },
+            { element: <IndexPage />, index: true },
             { path: 'user', element: <UserPage /> },
-            // { path: 'targets', element: <AllTargetsPage /> },
-            // { path: 'contents', element: <AllContentsPage /> },
-            // { path: 'scenes', element: <AllScenesPage /> },
-            // { path: 'scenes/new', element: <NewScenePage /> },
             {
               path: 'contents', children: [
                 { element: <AllContentsPage />, index: true },
@@ -87,10 +85,10 @@ export default function Router() {
           ]
         },
         // path with username and scene id
-        { path: '/:authorName/:sceneName', element: <PublicScenePage /> },
+        { path: ':authorName/:sceneName', element: <PublicScenePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" replace /> },
+        { path: '*', element: <Navigate to={`${ASSETS_URL}/404`} replace /> },
       ],
     },
   ]);

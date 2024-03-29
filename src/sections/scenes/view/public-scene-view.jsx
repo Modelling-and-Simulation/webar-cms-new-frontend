@@ -11,10 +11,8 @@ const loadAssets = (sceneData) => {
     const assets = sceneData.targetsAndContents.map((targetAndContent, index) => (
         <a-asset-item
             key={`item${index}`}
-            id="target0"
-            // id={`target${index}`}
-            src="http://localhost:8080/public/contentFiles/1710487355250630977527.glb"
-            // src={`${FILES_URL}/${targetAndContent.content.contentFile}`}
+            id={`target${index}`}
+            src={`${FILES_URL}/${targetAndContent.content.contentFile}`}
         />
     ));
 
@@ -34,6 +32,7 @@ const PublicScenePage = () => {
         const fetchScene = async () => {
             try {
                 const res = await getSceneByUrl(`${authorName}/${sceneName}`);
+                console.log('publicres', res.data);
                 setSceneData(res.data);
             } catch (error) {
                 console.error('error', error);
@@ -102,7 +101,7 @@ const PublicScenePage = () => {
                             <a-entity
                                 key={index}
                                 mindar-image-target="targetIndex: 0;"
-                                // mindar-image-target={`targetIndex: ${index};`}
+                            // mindar-image-target={`targetIndex: ${index};`}
                             >
                                 <a-gltf-model
                                     id="model"

@@ -14,7 +14,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/',
+  base: '/webar-cms-new-frontend',
   resolve: {
     alias: [
       {

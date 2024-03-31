@@ -94,35 +94,22 @@ const PublicScenePage = () => {
                         raycaster="far: ${customFields.libVersion}; objects: .clickable"
                     />
 
-                    {sceneData.targetsAndContents.map((targetAndContent, index) => {
-                        console.log('targetAndContent0', getUrl(sceneData.mindFile));
-                        console.log('targetAndContent1', index, getUrl(targetAndContent.content.contentFile));
+                    {sceneData.targetsAndContents.map((tc, index) => {
+                        const { position, rotation, scale } = tc;
                         return (
                             <a-entity
                                 key={index}
-                                mindar-image-target="targetIndex: 0;"
-                            // mindar-image-target={`targetIndex: ${index};`}
+                                mindar-image-target={`targetIndex: ${index};`}
                             >
                                 <a-gltf-model
                                     id="model"
                                     class="clickable"
-                                    src="#target0"
-                                    // src={`#target0`}
-                                    position="0 0 0"
-                                    scale="0.3 0.3 0.3"
-                                    rotation="-90 180 0"
+                                    src={`#target${index}`}
+                                    position={`${position.x} ${position.y} ${position.z}`}
+                                    scale={`${scale} ${scale} ${scale}`}
+                                    rotation={`${rotation.x} ${rotation.y} ${rotation.z}`}
                                     click-node="targetNode: SunRoof"
                                 />
-                                {/* <a-entity
-                                    id="model"
-                                    class="clickable"
-                                    // gltf-model={`url(${FILES_URL}/${targetAndContent.content.contentFile})`}
-                                    gltf-model="http://localhost:8080/public/contentFiles/1710487355250630977527.glb"
-                                    position="0 0 0"
-                                    scale="0.3 0.3 0.3"
-                                    rotation="-90 180 0"
-                                    click-node="targetNode: SunRoof"
-                                /> */}
                             </a-entity>
                         )
                     })}

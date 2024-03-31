@@ -57,7 +57,8 @@ export default function LoginView() {
 
       const accessToken = response?.data?.accessToken;
       const roleName = response?.data?.roleName;
-      setAuth({ username, roleName, accessToken });
+      const name = response?.data?.name;
+      setAuth({ username, roleName, accessToken, name });
       setUsername("");
       setPassword("");
 

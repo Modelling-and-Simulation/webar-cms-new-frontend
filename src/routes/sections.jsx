@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
-import { ASSETS_URL } from 'src/constants';
 import DashboardLayout from 'src/layouts/dashboard';
+import { ASSETS_URL, USER_ROLES } from 'src/constants';
 import { AuthProvider } from 'src/context/AuthProvider';
 
 import RequireAuth from 'src/components/auth/RequireAuth';
@@ -34,13 +34,6 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 
 // ----------------------------------------------------------------------
 
-const ROLES = {
-  Admin: "Admin",
-  Staff: "Staff",
-  RegisteredUser: "RegisteredUser",
-  Public: "Public",
-};
-
 export default function Router() {
   const routes = useRoutes([
     {
@@ -58,11 +51,18 @@ export default function Router() {
         {
           element:
             <DashboardLayout>
-              <RequireAuth allowedRoles={[ROLES.RegisteredUser]} />
+              <RequireAuth allowedRoles={[USER_ROLES.Admin, USER_ROLES.Staff, USER_ROLES.RegisteredUser]} />
             </DashboardLayout>
           , children: [
             { element: <IndexPage />, index: true },
-            { path: 'user', element: <UserPage /> },
+          ]
+        },
+        {
+          element:
+            <DashboardLayout>
+              <RequireAuth allowedRoles={[USER_ROLES.RegisteredUser]} />
+            </DashboardLayout>
+          , children: [
             {
               path: 'contents', children: [
                 { element: <AllContentsPage />, index: true },
@@ -81,8 +81,6 @@ export default function Router() {
                 { path: 'new', element: <NewScenePage /> },
               ]
             },
-            { path: 'products', element: <ProductsPage /> },
-            { path: 'blog', element: <BlogPage /> },
           ]
         },
         // path with username and scene id

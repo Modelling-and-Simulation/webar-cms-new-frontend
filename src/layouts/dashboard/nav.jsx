@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -15,19 +15,27 @@ import { RouterLink } from 'src/routes/components';
 import useAuth from 'src/hooks/useAuth';
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { ASSETS_URL } from 'src/constants';
+import { ASSETS_URL, USER_ROLES } from 'src/constants';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
-import navConfig from './config-navigation';
+import { userNavConfig, adminNavConfig, staffNavConfig } from './config-navigation';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
   const auth = useAuth();
+
+  const [userRole, setUserRole] = useState(USER_ROLES.Public);
+
+  useEffect(() => {
+    if (auth?.auth?.roleName) {
+      setUserRole(auth?.auth?.roleName);
+    }
+  }, [auth]);
 
   const upLg = useResponsive('up', 'lg');
 
@@ -57,19 +65,33 @@ export default function Nav({ openNav, onCloseNav }) {
         <Typography variant="subtitle2">{auth?.auth?.username}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {auth?.auth?.roleName}
+          {userRole}
         </Typography>
       </Box>
     </Box>
   );
 
-  const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
-    </Stack>
-  );
+  const renderMenu = () => {
+    let navConfig = [];
+
+    if (userRole === USER_ROLES.Admin) {
+      navConfig = adminNavConfig;
+    } else if (userRole === USER_ROLES.Staff) {
+      navConfig = staffNavConfig;
+    } else if (userRole === USER_ROLES.RegisteredUser) {
+      navConfig = userNavConfig;
+    }
+
+    return (
+      <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+        {
+          navConfig.map((item) => (
+            <NavItem key={item.title} item={item} />
+          ))
+        }
+      </Stack>
+    )
+  }
 
   const renderContent = (
     <Scrollbar
@@ -86,7 +108,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       {renderAccount}
 
-      {renderMenu}
+      {renderMenu()}
 
       <Box sx={{ flexGrow: 1 }} />
 

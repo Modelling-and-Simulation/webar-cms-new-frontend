@@ -8,7 +8,7 @@ const icon = (name) => (
   <SvgColor src={`${ASSETS_URL}/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
-const navConfig = [
+const userNavConfig = [
   {
     title: 'dashboard',
     path: '/',
@@ -31,4 +31,25 @@ const navConfig = [
   },
 ];
 
-export default navConfig;
+const staffNavConfig = [
+  {
+    title: 'dashboard',
+    path: '/',
+    icon: icon('ic_analytics'),
+  },
+];
+
+const adminNavConfig = [
+  {
+    title: 'dashboard',
+    path: '/',
+    icon: icon('ic_analytics'),
+  },
+  {
+    title: 'users',
+    path: '/users',
+    icon: icon('ic_user'),
+  }
+];
+
+export { userNavConfig, adminNavConfig, staffNavConfig };

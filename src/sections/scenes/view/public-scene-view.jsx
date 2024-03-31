@@ -32,7 +32,6 @@ const PublicScenePage = () => {
         const fetchScene = async () => {
             try {
                 const res = await getSceneByUrl(`${authorName}/${sceneName}`);
-                console.log('publicres', res.data);
                 setSceneData(res.data);
             } catch (error) {
                 console.error('error', error);

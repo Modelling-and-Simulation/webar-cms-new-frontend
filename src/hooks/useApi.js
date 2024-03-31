@@ -18,7 +18,11 @@ const useApi = () => {
   // Scenes
   const createScene = (data) => axiosPrivate.post('/scenes', data);
   const getAllScenes = () => axiosPrivate.get('/scenes');
+  const getSceneById = (id) => axiosPrivate.get(`/scenes/${id}`);
   const getSceneByUrl = (url) => axiosPublic.get(`/public/${url}`);
+
+  const updateSceneTransformations = (id, data) =>
+    axiosPrivate.put(`/scenes/transformation/${id}`, data);
 
   return {
     loginApi,
@@ -29,7 +33,9 @@ const useApi = () => {
     createContent,
     createScene,
     getAllScenes,
+    getSceneById,
     getSceneByUrl,
+    updateSceneTransformations,
   };
 };
 

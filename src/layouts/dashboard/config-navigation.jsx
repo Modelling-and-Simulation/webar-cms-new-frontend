@@ -37,6 +37,11 @@ const staffNavConfig = [
     path: '/',
     icon: icon('ic_analytics'),
   },
+  {
+    title: 'Transformations',
+    path: '/transformations/edit',
+    icon: icon('ic_tranformations'),
+  }
 ];
 
 const adminNavConfig = [

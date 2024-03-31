@@ -27,6 +27,9 @@ export const AllScenesPage = lazy(() => import('src/pages/scenes/all-scenes'));
 export const NewScenePage = lazy(() => import('src/pages/scenes/new-scene'));
 export const PublicScenePage = lazy(() => import('src/pages/scenes/public-scene'));
 
+// Staff pages
+export const ChangeTranformationsPage = lazy(() => import('src/pages/staff/change-tranformations'));
+
 // Test pages
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
@@ -49,6 +52,7 @@ export default function Router() {
       ),
       children: [
         {
+          // Dashboard layout with auth
           element:
             <DashboardLayout>
               <RequireAuth allowedRoles={[USER_ROLES.Admin, USER_ROLES.Staff, USER_ROLES.RegisteredUser]} />
@@ -58,6 +62,7 @@ export default function Router() {
           ]
         },
         {
+          // Registered user with navigation
           element:
             <DashboardLayout>
               <RequireAuth allowedRoles={[USER_ROLES.RegisteredUser]} />
@@ -82,6 +87,19 @@ export default function Router() {
               ]
             },
           ]
+        },
+        {
+          // Staff user with navigation
+          element:
+            <DashboardLayout>
+              <RequireAuth allowedRoles={[USER_ROLES.Staff]} />
+            </DashboardLayout>
+          , children: []
+        },
+        {
+          // Staff user without navigation
+          element: <RequireAuth allowedRoles={[USER_ROLES.Staff]} />,
+          children: [{ path: 'transformations/edit', element: <ChangeTranformationsPage /> }]
         },
         // path with username and scene id
         { path: ':authorName/:sceneName', element: <PublicScenePage /> },

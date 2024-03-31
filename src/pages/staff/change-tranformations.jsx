@@ -1,17 +1,15 @@
 import { Helmet } from 'react-helmet-async';
 
-import { TargetsView } from 'src/sections/targets/view';
-
 // ----------------------------------------------------------------------
 
-export default function AllTargetsPage() {
+export default function AllContentsPage() {
   return (
     <>
       <Helmet>
-        <title> All Targets </title>
+        <title> Change Transformations </title>
       </Helmet>
 
-      <TargetsView />
+      <div>Change transormations</div>
     </>
   );
 }

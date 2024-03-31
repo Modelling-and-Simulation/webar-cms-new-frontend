@@ -61,8 +61,9 @@ export default function LoginView() {
       setAuth({ username, roleName, accessToken, name });
       setUsername("");
       setPassword("");
-
-      router.replace(from);
+      
+      if (from === ASSETS_URL) router.replace("/");
+      else router.replace(from);
     } catch (err) {
       const resErr = err?.response?.data?.message;
       if (resErr) {

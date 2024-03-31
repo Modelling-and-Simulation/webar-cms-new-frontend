@@ -10,6 +10,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { Box, Stack, useTheme, useMediaQuery } from '@mui/material';
 
+import useApi from 'src/hooks/useApi';
+
 import { FILES_URL } from 'src/constants';
 
 import Iconify from 'src/components/iconify';
@@ -62,10 +64,28 @@ const showSelectedImage = (selectedImage) => (
 
 export default function NewSceneDialog({ open, setOpen, addScene }) {
     const theme = useTheme();
+    const { getAllContents, getAllTargets } = useApi();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [currentTarget, setCurrentTarget] = React.useState(null);
     const [currentContent, setCurrentContent] = React.useState(null);
+    const [tableData, setTableData] = React.useState({ targets: [], contents: [] });
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            const targetsResponse = await getAllTargets();
+            setTableData(prev => ({ ...prev, targets: targetsResponse.data }));
+
+            const contentsResponse = await getAllContents();
+            setTableData(prev => ({ ...prev, contents: contentsResponse.data }));
+            setIsLoading(false);
+        }
+
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const clearCurrentData = () => {
         setCurrentTarget(null);
@@ -127,8 +147,8 @@ export default function NewSceneDialog({ open, setOpen, addScene }) {
                     justifyContent="space-between"
                     mt={2}
                 >
-                    <AllTargetsTable selected={currentTarget} setSelected={setCurrentTarget} />
-                    <AllContentsTable selected={currentContent} setSelected={setCurrentContent} />
+                    <AllTargetsTable selected={currentTarget} setSelected={setCurrentTarget} targets={tableData.targets} isLoading={isLoading} />
+                    <AllContentsTable selected={currentContent} setSelected={setCurrentContent} contents={tableData.contents} isLoading={isLoading} />
                 </Stack>
             </DialogContent>
 

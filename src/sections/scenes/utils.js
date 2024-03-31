@@ -65,7 +65,7 @@ const loadImage = async (file) =>
     img.src = URL.createObjectURL(file);
   });
 
-export const generateMindFile = async (compiler, files) => {
+export const generateMindFile = async (compiler, files, setProgress) => {
   const images = [];
   console.log('files', files);
   for (let i = 0; i < files.length; i += 1) {
@@ -75,7 +75,10 @@ export const generateMindFile = async (compiler, files) => {
   console.log('images', images);
   const _start = new Date().getTime();
   const dataList = await compiler.compileImageTargets(images, (progress) => {
-    console.log('progress', progress);
+    // console.log('progress', progress);
+    if (setProgress) {
+      setProgress(progress);
+    }
   });
   console.log('exec time compile: ', new Date().getTime() - _start);
   for (let i = 0; i < dataList.length; i += 1) {

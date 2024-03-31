@@ -5,9 +5,9 @@ import { Compiler } from "mind-ar/dist/mindar-image.prod";
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Box, TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import { Box, Dialog, TextField, LinearProgress } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -24,6 +24,11 @@ import { downloadImages, generateMindFile } from '../utils';
 
 // ----------------------------------------------------------------------
 
+const STATUS_MSG = {
+    GENERATE_MIND_FILE: 'Generating mind file...',
+    SAVE_SCENE: 'Saving scene...',
+}
+
 const showSelectedImage = (selectedImage) => (
     <Box
         component="img"
@@ -38,6 +43,19 @@ const showSelectedImage = (selectedImage) => (
     />
 );
 
+const showStatus = (statusMsg, isLoading, progress) => (
+    <Dialog open={isLoading}>
+        <Stack direction="column" alignItems="center" justifyContent="center" gap={2} p={5}>
+            <Typography variant="h6">{statusMsg}</Typography>
+            {statusMsg === STATUS_MSG.GENERATE_MIND_FILE && (
+                <Box sx={{ width: '100%' }}>
+                    <LinearProgress variant="determinate" color='inherit' value={progress} />
+                </Box>
+            )}
+        </Stack>
+    </Dialog>
+);
+
 const NewScenePage = () => {
     const router = useRouter();
     const auth = useAuth();
@@ -50,6 +68,8 @@ const NewScenePage = () => {
     const [scenes, setScenes] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [statusMsg, setStatusMsg] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [mindFileProgress, setMindFileProgress] = useState(0);
 
     useEffect(() => {
         // remove special characters. replace spaces with hyphen
@@ -64,19 +84,21 @@ const NewScenePage = () => {
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);
+
         // Generate mind file
-        setStatusMsg('Generating .mind file...');
+        setStatusMsg(STATUS_MSG.GENERATE_MIND_FILE);
         console.log('Scenes', scenes);
         const imageFiles = await downloadImages(
             scenes.map((scene) => scene.target.targetImage)
         );
         console.log('Image files', imageFiles);
-        const mindFile = await generateMindFile(new Compiler(), imageFiles);
+        const mindFile = await generateMindFile(new Compiler(), imageFiles, setMindFileProgress);
 
         console.log('Mind file', mindFile);
 
         // Upload mind file
-        setStatusMsg('Uploading scene...');
+        setStatusMsg(STATUS_MSG.SAVE_SCENE);
         const formData = new FormData();
         formData.append('mindFile', mindFile);
         formData.append('sceneName', sceneUrl);
@@ -95,12 +117,16 @@ const NewScenePage = () => {
             toast.error('Error creating scene');
         }).finally(() => {
             setStatusMsg('');
-        })
+            setIsLoading(false);
+        });
     };
 
     return (
         <Container>
             <ToastContainer />
+
+            {showStatus(statusMsg, isLoading, mindFileProgress)}
+
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <Typography variant="h4">New Scene</Typography>
 
@@ -109,7 +135,7 @@ const NewScenePage = () => {
                     color="inherit"
                     startIcon={<Iconify icon="typcn:tick" />}
                     onClick={handleSubmit}
-                    disabled={scenes.length === 0 || sceneName === '' || statusMsg !== ''}
+                    disabled={scenes.length === 0 || sceneName === '' || statusMsg !== '' || isLoading}
                 >
                     Submit
                 </Button>

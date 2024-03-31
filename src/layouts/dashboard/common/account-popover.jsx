@@ -16,6 +16,8 @@ import useLogout from 'src/hooks/useLogout';
 
 import { ASSETS_URL } from 'src/constants';
 
+// import ProfilePage from './profile-popover';
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -26,6 +28,7 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     icon: 'eva:person-fill',
+    // route: '/profile',
   },
   {
     label: 'Settings',
@@ -54,6 +57,18 @@ export default function AccountPopover() {
     await logout();
     router.replace('/login');
   }
+
+  const handleMenuOptionClick = (route) => {
+    console.log("clicked");
+    console.log(route);
+    router.replace('/profile'); 
+    handleClose();
+    // <ProfilePage />
+    // if (route === '/profile') {
+    //   router.replace('/profile'); // Navigate to the profile page
+    //   handleClose(); // Close the popover after navigation
+    // }
+  };
 
   return (
     <>
@@ -109,9 +124,9 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
-          </MenuItem>
+          <MenuItem key={option.label} onClick={() => handleMenuOptionClick(option.route)}>
+          {option.label}
+        </MenuItem>
         ))}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />

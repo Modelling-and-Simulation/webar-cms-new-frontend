@@ -21,6 +21,7 @@ export default function TargetCard({ target }) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleEditClick = () => {
+    console.log(target);
     setShowEditPopup(true);
   };
 

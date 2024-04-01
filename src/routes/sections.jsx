@@ -60,6 +60,8 @@ export default function Router() {
             </DashboardLayout>
           , children: [
             { element: <IndexPage />, index: true },
+            { path: 'profile', element: <ProfilePage /> },
+
           ]
         },
         {
@@ -107,7 +109,7 @@ export default function Router() {
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
         { path: 'unauthorized', element: <Page403 /> },
-        { path: 'profile', element: <ProfilePage /> },
+        // { path: 'profile', element: <ProfilePage /> },
         { path: '*', element: <Navigate to={`${ASSETS_URL}/404`} replace /> },
       ],
     },

@@ -3,47 +3,39 @@ import React from 'react';
 import {
   Card,
   Grid,
-//   Link,
-CardMedia,
-Container,
+  Stack,
+  CardMedia,
+  Container,
   Typography,
-//   Breadcrumbs,
   CardContent,
 } from '@mui/material';
 
 export default function ProfilePage() {
   return (
-    <section style={{ backgroundColor: '#eee' }}>
-      <Container className="py-5">
-        <Grid container spacing={4}>
-          {/* <Grid item xs={12}>
-            <Breadcrumbs aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
-              <Link color="inherit" href="#">
-                Home
-              </Link>
-              <Link color="inherit" href="#">
-                User
-              </Link>
-              <Typography color="textPrimary">User Profile</Typography>
-            </Breadcrumbs>
-          </Grid> */}
-
-          <Grid item lg={4}>
-            <Card className="mb-4">
-              <CardContent className="text-center">
-                <CardMedia
-                  component="img"
-                  image="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: '150px' }}
-                />
-                <Typography variant="body2" color="textSecondary" className="mb-4">Bay Area, San Francisco, CA</Typography>
+    <Container maxWidth>
+      <Stack direction="column" alignItems="flex-start" justifyContent="space-between" mb={6}>
+        <Typography variant="h4" align="left" gutterBottom>Profile</Typography>
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} sm={6}> {/* Adjusted to half the width */}
+            <Card className="mb-4" style={{ maxWidth: '250px' }}> {/* Set maximum width */}
+              <CardContent className="text-center" style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div>
+                  <CardMedia
+                    component="img"
+                    image="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                    alt="avatar"
+                    className="rounded-circle"
+                    style={{ width: '150px' }}
+                  />
+                </div>
+                <div>
+                  <Typography variant="body2" color="textSecondary" className="mb-4">Bay Area, San Francisco, CA</Typography>
+                </div>
               </CardContent>
             </Card>
           </Grid>
 
-          <Grid item lg={8}>
+          <Grid item xs={12}> {/* Adjusted to half the width */}
             <Card className="mb-4">
               <CardContent>
                 <Grid container spacing={2}>
@@ -92,10 +84,9 @@ export default function ProfilePage() {
                 </Grid>
               </CardContent>
             </Card>
-
           </Grid>
         </Grid>
-      </Container>
-    </section>
+      </Stack>
+    </Container>
   );
 }

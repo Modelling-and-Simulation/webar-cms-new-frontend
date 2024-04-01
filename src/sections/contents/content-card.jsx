@@ -21,6 +21,7 @@ export default function ContentCard({ content }) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleEditClick = () => {
+    console.log(content);
     setShowEditPopup(true);
   };
 
@@ -107,6 +108,7 @@ export default function ContentCard({ content }) {
       {/* Delete Confirmation */}
       {showDeleteConfirmation && (
         <ContentDeleteCard
+          content={content}
           onClose={() => setShowDeleteConfirmation(false)}
           onDelete={handleDeleteConfirm}
         />

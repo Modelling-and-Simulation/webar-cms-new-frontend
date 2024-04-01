@@ -105,6 +105,7 @@ export default function TargetCard({ target }) {
       {/* Delete Confirmation */}
       {showDeleteConfirmation && (
         <TargetDeleteCard
+          target={target}
           onClose={() => setShowDeleteConfirmation(false)}
           onDelete={handleDeleteConfirm}
         />

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -7,6 +8,8 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+
+import useApi from 'src/hooks/useApi';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -16,28 +19,41 @@ import ContentDeleteCard from './content-delete-card';
 
 // ----------------------------------------------------------------------
 
-export default function ContentCard({ content }) {
+export default function ContentCard({ content, refresh }) {
+  const { editContent, deleteContent } = useApi();
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleEditClick = () => {
-    console.log(content);
     setShowEditPopup(true);
   };
 
   const handleDeleteClick = () => {
     setShowDeleteConfirmation(true);
-    // Handle delete functionality here
   };
 
-  const handleEditSave = (editedContent) => {
-    // Implement edit functionality here
-    console.log('Edited content:', editedContent);
+  const handleEdit = (editedContent) => {
+    editContent(content._id, editedContent)
+      .then(() => {
+        refresh();
+        setShowEditPopup(false);
+        toast.success('Content updated');
+      }).catch((error) => {
+        toast.error('Error editing content');
+        console.error('Error editing content:', error);
+      });
   };
 
-  const handleDeleteConfirm = () => {
-    // Implement delete functionality here
-    console.log('Deleting content:', content);
+  const handleDelete = () => {
+    deleteContent(content._id)
+      .then(() => {
+        refresh();
+        setShowDeleteConfirmation(false);
+        toast.success('Content deleted');
+      }).catch((error) => {
+        toast.error('Error deleting content');
+        console.error('Error deleting content:', error);
+      });
   };
 
   const renderStatus = (
@@ -84,12 +100,12 @@ export default function ContentCard({ content }) {
             {content.contentName}
           </Typography>
           <div>
-            <Iconify icon="akar-icons:edit" onClick={handleEditClick} style={{ cursor: 'pointer' }}/>
-            <Iconify icon="fluent:delete-12-regular" onClick={handleDeleteClick} style={{ cursor: 'pointer' }}/>
+            <Iconify icon="akar-icons:edit" onClick={handleEditClick} style={{ cursor: 'pointer' }} />
+            <Iconify icon="fluent:delete-12-regular" onClick={handleDeleteClick} style={{ cursor: 'pointer' }} />
           </div>
         </Stack>
         <Tooltip title={content.description}> {/* Use Tooltip component */}
-          <Typography variant="body2" sx={{  padding: 2 }}>
+          <Typography variant="body2" sx={{ padding: 2 }}>
             {content.description}
           </Typography>
         </Tooltip>
@@ -97,11 +113,11 @@ export default function ContentCard({ content }) {
       </Link>
 
       {/* Edit Popup */}
-      {showEditPopup && (  
-        <ContentEditCard 
+      {showEditPopup && (
+        <ContentEditCard
           content={content}
+          onConfirm={handleEdit}
           onClose={() => setShowEditPopup(false)}
-          onSave={handleEditSave}
         />
       )}
 
@@ -110,7 +126,7 @@ export default function ContentCard({ content }) {
         <ContentDeleteCard
           content={content}
           onClose={() => setShowDeleteConfirmation(false)}
-          onDelete={handleDeleteConfirm}
+          onDelete={handleDelete}
         />
       )}
 
@@ -120,4 +136,5 @@ export default function ContentCard({ content }) {
 
 ContentCard.propTypes = {
   content: PropTypes.object,
+  refresh: PropTypes.func,
 };

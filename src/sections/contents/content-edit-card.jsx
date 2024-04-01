@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { toast } from "react-toastify";
 import React, { useState } from 'react';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,13 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-import { useRouter } from 'src/routes/hooks';
-
-import useApi from 'src/hooks/useApi';
-
-const ContentEditCard = ({ content, onClose, onSave }) => {
-  const router = useRouter();
-  const { editContent } = useApi();
+const ContentEditCard = ({ content, onClose, onConfirm }) => {
   const [editedContent, setEditedContent] = useState({ ...content });
 
   const handleChange = (e) => {
@@ -28,20 +21,7 @@ const ContentEditCard = ({ content, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    editContent(content._id, {
-      contentName: editedContent.contentName,
-      description: editedContent.description,
-    }).then((response) => {
-      toast.success('Content updated successfully');
-      router.reload();
-    }).catch((error) => {
-      console.error('Error updating content', error);
-      toast.error('Error updating content');
-    }).finally(() => {
-      // setStatusMsg('');
-    })
-    onSave(editedContent);
-    onClose();
+    onConfirm(editedContent);
   };
 
   return (
@@ -75,9 +55,9 @@ const ContentEditCard = ({ content, onClose, onSave }) => {
 };
 
 ContentEditCard.propTypes = {
-    content: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
+  content: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default ContentEditCard;

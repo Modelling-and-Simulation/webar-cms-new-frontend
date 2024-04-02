@@ -16,7 +16,7 @@ const FormInput = ({ label, value, onChange, type, ...props }) => {
         } if (type === 'position') {
             return -10;
         } 
-            return -360;
+            return -180;
     }
 
     const max = () => {
@@ -25,7 +25,7 @@ const FormInput = ({ label, value, onChange, type, ...props }) => {
         } if (type === 'position') {
             return 10;
         } 
-            return 360;
+            return 180;
     }
     return(
     <Box>

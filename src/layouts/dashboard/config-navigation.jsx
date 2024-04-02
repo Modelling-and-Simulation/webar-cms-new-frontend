@@ -39,7 +39,7 @@ const staffNavConfig = [
   },
   {
     title: 'Transformations',
-    path: '/transformations/edit',
+    path: '/transformations',
     icon: icon('ic_tranformations'),
   }
 ];

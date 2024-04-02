@@ -22,6 +22,7 @@ const useApi = () => {
   // Scenes
   const createScene = (data) => axiosPrivate.post('/scenes', data);
   const getAllScenes = () => axiosPrivate.get('/scenes');
+  const getScenesForTransformation = () => axiosPrivate.get('/scenes/for-transformation')
   const getSceneById = (id) => axiosPrivate.get(`/scenes/${id}`);
   const getSceneByUrl = (url) => axiosPublic.get(`/public/${url}`);
 
@@ -41,6 +42,7 @@ const useApi = () => {
     editContent,
     createScene,
     getAllScenes,
+    getScenesForTransformation,
     getSceneById,
     getSceneByUrl,
     updateSceneTransformations,

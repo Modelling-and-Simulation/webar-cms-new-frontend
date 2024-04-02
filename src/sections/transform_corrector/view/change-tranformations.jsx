@@ -1,18 +1,27 @@
+import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react'
+import { toast, ToastContainer } from 'react-toastify';
 
 import { Box, Container } from '@mui/material';
 
+import { useRouter } from 'src/routes/hooks';
+
 import useApi from 'src/hooks/useApi'
+
+import Loading from 'src/components/loading';
+import Iconify from 'src/components/iconify';
 
 import ModelPreview from '../model-preview';
 import ChangeTranformationForm from '../change-tranfromation-form';
 
 export default function ChangeTranformationsView() {
-    const { getSceneById, updateSceneTransformations } = useApi()
+    const router = useRouter();
 
-    const sceneId = '6608dcff1e2e397198287b40';
+    const { getSceneById, updateSceneTransformations } = useApi()
+    const { sceneId } = useParams()
+
     const [sceneData, setSceneData] = useState(null);
-    const [selectedScene, setSelectedScene] = useState(null);
+    const [selectedTarget, setSelectedTarget] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
     const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
@@ -22,8 +31,8 @@ export default function ChangeTranformationsView() {
         const fetchScene = async () => {
             try {
                 const res = await getSceneById(sceneId)
+                setSelectedTarget(res.data.targetsAndContents[0]);
                 setSceneData(res.data);
-                setSelectedScene(res.data.targetsAndContents[1]);
             } catch (error) {
                 console.error('error', error);
                 setSceneData(null);
@@ -37,7 +46,7 @@ export default function ChangeTranformationsView() {
     // update the scene
     const updateScene = () => {
         const updatedScene = sceneData;
-        const updatedSelectedScene = selectedScene;
+        const updatedSelectedScene = selectedTarget;
 
         updatedSelectedScene.position = position;
         updatedSelectedScene.rotation = rotation;
@@ -46,53 +55,97 @@ export default function ChangeTranformationsView() {
         updatedScene.targetsAndContents[selectedIndex] = updatedSelectedScene;
 
         updateSceneTransformations(sceneId, { position, rotation, scale, selectedIndex })
+            .then(() => {
+                toast.success('Scene updated successfully');
+                router.replace(`/transformations`);
+            })
+            .catch((error) => {
+                console.error('error', error);
+                toast.error('Error updating scene');
+            });
     }
 
     useEffect(() => {
-        if (selectedScene?.position) {
-            setPosition(selectedScene.position);
+        if (selectedTarget?.position) {
+            setPosition(selectedTarget.position);
         }
-        if (selectedScene?.rotation) {
-            setRotation(selectedScene.rotation);
+        if (selectedTarget?.rotation) {
+            setRotation(selectedTarget.rotation);
         }
-        if (selectedScene?.scale) {
-            setScale(selectedScene.scale);
+        if (selectedTarget?.scale) {
+            setScale(selectedTarget.scale);
         }
 
         // get the index of the selected scene
         if (!sceneData) return;
-        const index = sceneData.targetsAndContents.findIndex((scene) => scene._id === selectedScene._id);
+        const index = sceneData.targetsAndContents.findIndex((target) => target._id === selectedTarget._id);
         setSelectedIndex(index);
-    }, [sceneData, selectedScene])
+    }, [sceneData, selectedTarget])
     return (
-        <Container maxWidth>
+        <>
             {!sceneData ? (
-                <div>Loading...</div>
+                <Loading />
             ) : (
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 3 }}>
-                    <Box width="20vw">
-                        <ChangeTranformationForm
-                            position={position}
-                            setPosition={setPosition}
-                            rotation={rotation}
-                            setRotation={setRotation}
-                            scale={scale}
-                            setScale={setScale}
-                            handleSubmit={updateScene}
-                        />
-                    </Box>
+                <Container maxWidth>
+                    <ToastContainer />
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 3 }}>
+                        <Box width="20vw" sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            padding: 2,
 
-                    <ModelPreview
-                        selectedScene={selectedScene}
-                        mindFile={sceneData.mindFile}
-                        targetIndex={selectedIndex}
-                        position={position}
-                        rotation={rotation}
-                        scale={scale}
-                    />
-                </Box>
+                        }}>
+                            {
+                                sceneData.targetsAndContents.map((target, index) => (
+                                    <Box
+                                        key={target._id}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            padding: 1,
+                                            border: '1px solid',
+                                            borderColor: selectedIndex === index ? 'primary.main' : 'transparent',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                        }}
+                                        onClick={() => {
+                                            setSelectedTarget(target);
+                                        }}
+                                    >
+                                        {target.target.targetName}
+                                        {target.isTransformed && <Iconify icon="bitcoin-icons:verify-filled" width={40} sx={{color: "green"}} />}
+                                    </Box>
+                                ))
+                            }
+                        </Box>
+
+                        <Box width="20vw">
+                            <ChangeTranformationForm
+                                position={position}
+                                setPosition={setPosition}
+                                rotation={rotation}
+                                setRotation={setRotation}
+                                scale={scale}
+                                setScale={setScale}
+                                handleSubmit={updateScene}
+                            />
+                        </Box>
+
+                        <Box width="50vw">
+                            <ModelPreview
+                                selectedTarget={selectedTarget}
+                                mindFile={sceneData.mindFile}
+                                targetIndex={selectedIndex}
+                                position={position}
+                                rotation={rotation}
+                                scale={scale}
+                            />
+                        </Box>
+                    </Box>
+                </Container>
             )}
-        </Container>
+        </>
     );
 }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -7,6 +8,8 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+
+import useApi from 'src/hooks/useApi';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -16,7 +19,8 @@ import TargetDeleteCard from './target-delete-card';
 
 // ----------------------------------------------------------------------
 
-export default function TargetCard({ target }) {
+export default function TargetCard({ target, refresh }) {
+  const { editTarget, deleteTarget } = useApi();
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
@@ -28,12 +32,28 @@ export default function TargetCard({ target }) {
     setShowDeleteConfirmation(true);
   };
 
-  const handleEditSave = (editedContent) => {
-    console.log('Edited target:', editedContent);
+  const handleEdit = (editedContent) => {
+    editTarget(target._id, editedContent)
+      .then(() => {
+        refresh();
+        setShowEditPopup(false);
+        toast.success('Target updated');
+      }).catch((error) => {
+        toast.error('Error editing target');
+        console.error('Error editing target:', error);
+      });
   };
 
-  const handleDeleteConfirm = () => {
-    console.log('Deleting target:', target);
+  const handleDelete = () => {
+    deleteTarget(target._id)
+      .then(() => {
+        refresh();
+        setShowDeleteConfirmation(false);
+        toast.success('Target deleted');
+      }).catch((error) => {
+        toast.error('Error deleting target');
+        console.error('Error deleting target:', error);
+      });
   };
 
   const renderStatus = (
@@ -80,12 +100,12 @@ export default function TargetCard({ target }) {
             {target.targetName}
           </Typography>
           <div>
-            <Iconify icon="akar-icons:edit" onClick={handleEditClick} style={{ cursor: 'pointer' }}/>
-            <Iconify icon="fluent:delete-12-regular" onClick={handleDeleteClick} style={{ cursor: 'pointer' }}/>
+            <Iconify icon="akar-icons:edit" onClick={handleEditClick} style={{ cursor: 'pointer' }} />
+            <Iconify icon="fluent:delete-12-regular" onClick={handleDeleteClick} style={{ cursor: 'pointer' }} />
           </div>
         </Stack>
         <Tooltip title={target.description}> {/* Use Tooltip component */}
-          <Typography variant="body2" sx={{  padding: 2 }}>
+          <Typography variant="body2" sx={{ padding: 2 }}>
             {target.description}
           </Typography>
         </Tooltip>
@@ -94,18 +114,19 @@ export default function TargetCard({ target }) {
 
       {/* Edit Popup */}
       {showEditPopup && (
-        <TargetEditCard 
+        <TargetEditCard
           target={target}
+          onConfirm={handleEdit}
           onClose={() => setShowEditPopup(false)}
-          onSave={handleEditSave}
         />
       )}
 
       {/* Delete Confirmation */}
       {showDeleteConfirmation && (
         <TargetDeleteCard
+          target={target}
           onClose={() => setShowDeleteConfirmation(false)}
-          onDelete={handleDeleteConfirm}
+          onDelete={handleDelete}
         />
       )}
 
@@ -115,4 +136,5 @@ export default function TargetCard({ target }) {
 
 TargetCard.propTypes = {
   target: PropTypes.object,
+  refresh: PropTypes.func,
 };

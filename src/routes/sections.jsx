@@ -13,6 +13,7 @@ export const IndexPage = lazy(() => import('src/pages/app'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const Page403 = lazy(() => import('src/pages/unauthorized'));
+export const ProfilePage = lazy(() => import('src/pages/profile'));
 
 // Target pages
 export const AllTargetsPage = lazy(() => import('src/pages/targets/all-targets'));
@@ -59,6 +60,8 @@ export default function Router() {
             </DashboardLayout>
           , children: [
             { element: <IndexPage />, index: true },
+            { path: 'profile', element: <ProfilePage /> },
+
           ]
         },
         {
@@ -106,6 +109,7 @@ export default function Router() {
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
         { path: 'unauthorized', element: <Page403 /> },
+        // { path: 'profile', element: <ProfilePage /> },
         { path: '*', element: <Navigate to={`${ASSETS_URL}/404`} replace /> },
       ],
     },

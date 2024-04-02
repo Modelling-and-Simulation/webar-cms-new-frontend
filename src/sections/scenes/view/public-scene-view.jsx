@@ -7,6 +7,8 @@ import useApi from 'src/hooks/useApi';
 
 import { FILES_URL } from 'src/constants';
 
+import Loading from 'src/components/loading';
+
 const loadAssets = (sceneData) => {
     const assets = sceneData.targetsAndContents.map((targetAndContent, index) => (
         <a-asset-item
@@ -74,7 +76,7 @@ const PublicScenePage = () => {
             }}
         >
             {!sceneData ? (
-                <div>Loading...</div>
+                <Loading />
             ) : (
                 <a-scene
                     ref={sceneRef}

@@ -10,10 +10,14 @@ const useApi = () => {
   // Targets
   const getAllTargets = () => axiosPrivate.get('/targets');
   const createTarget = (data) => axiosPrivate.post('/targets', data);
+  const editTarget = (id, data) => axiosPrivate.put(`/targets/${id}`, data);
+  const deleteTarget = (id) => axiosPrivate.delete(`/targets/${id}`);
 
   // Contents
   const getAllContents = () => axiosPrivate.get('/contents');
   const createContent = (data) => axiosPrivate.post('/contents', data);
+  const editContent = (id, data) => axiosPrivate.put(`/contents/${id}`, data);
+  const deleteContent = (id) => axiosPrivate.delete(`/contents/${id}`);
 
   // Scenes
   const createScene = (data) => axiosPrivate.post('/scenes', data);
@@ -29,8 +33,12 @@ const useApi = () => {
     logoutApi,
     getAllTargets,
     createTarget,
+    editTarget,
+    deleteTarget,
+    deleteContent,
     getAllContents,
     createContent,
+    editContent,
     createScene,
     getAllScenes,
     getSceneById,

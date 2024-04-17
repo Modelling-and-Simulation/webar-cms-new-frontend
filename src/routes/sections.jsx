@@ -27,6 +27,7 @@ export const NewContentPage = lazy(() => import('src/pages/contents/new-content'
 // Scene pages
 export const AllScenesPage = lazy(() => import('src/pages/scenes/all-scenes'));
 export const NewScenePage = lazy(() => import('src/pages/scenes/new-scene'));
+export const EditScenePage = lazy(() => import('src/pages/scenes/edit-scenes'));
 export const PublicScenePage = lazy(() => import('src/pages/scenes/public-scene'));
 
 // Staff pages
@@ -89,6 +90,7 @@ export default function Router() {
               path: 'scenes', children: [
                 { element: <AllScenesPage />, index: true },
                 { path: 'new', element: <NewScenePage /> },
+                { path: 'edit/:id', element: <EditScenePage /> },
               ]
             },
           ]

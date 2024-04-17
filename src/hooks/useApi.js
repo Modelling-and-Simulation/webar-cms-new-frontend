@@ -24,7 +24,10 @@ const useApi = () => {
   const getAllScenes = () => axiosPrivate.get('/scenes');
   const getScenesForTransformation = () => axiosPrivate.get('/scenes/for-transformation')
   const getSceneById = (id) => axiosPrivate.get(`/scenes/${id}`);
+  const editScene = (id, data) => axiosPrivate.put(`/scenes/name-and-description/${id}`, data);
+  const editFullScene = (id, data) => axiosPrivate.put(`/scenes/${id}`, data);
   const getSceneByUrl = (url) => axiosPublic.get(`/public/${url}`);
+  const deleteScene = (id) => axiosPrivate.delete(`/scenes/${id}`);
 
   const updateSceneTransformations = (id, data) =>
     axiosPrivate.put(`/scenes/transformation/${id}`, data);
@@ -42,6 +45,9 @@ const useApi = () => {
     editContent,
     createScene,
     getAllScenes,
+    editScene,
+    editFullScene,
+    deleteScene,
     getScenesForTransformation,
     getSceneById,
     getSceneByUrl,

@@ -162,9 +162,12 @@ export default function ScenePage() {
               <TableBody>
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
+                  .map((row) => {
+                    console.log(row._id);
+                    return (
                     <SceneTableRow
                       key={row._id}
+                      id={row._id}
                       name={row.sceneName}
                       description={row.description}
                       isEnabled={row.isEnabled}
@@ -174,8 +177,7 @@ export default function ScenePage() {
                       selected={selected.indexOf(row.sceneName) !== -1}
                       handleClick={(event) => handleClick(event, row.sceneName)}
                     />
-                  ))}
-
+                  )})}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, scenes.length)}

@@ -11,7 +11,7 @@ import Loading from 'src/components/loading';
 
 // ----------------------------------------------------------------------
 
-export default function ModelPreview({ selectedTarget, mindFile, targetIndex, position, rotation, scale }) {
+export default function ModelPreview({ sceneData, mindFile, targetIndex, position, rotation, scale }) {
     const sceneRef = useRef(null);
 
     const [stream, setStream] = useState(null);
@@ -21,11 +21,8 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
     const getUrl = (filePath) => `${FILES_URL}/${filePath}`
 
     useEffect(() => {
-        if (!selectedTarget) {
-            return;
-        }
-
-        const imageUrl = getUrl(selectedTarget?.target?.targetImage);
+        if (!sceneData) return;
+        const imageUrl = getUrl(sceneData?.targetsAndContents[targetIndex]?.target?.targetImage);
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = imageUrl;
@@ -48,7 +45,7 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
 
             setStream(canvas.captureStream());
         };
-    }, [selectedTarget]);
+    }, [sceneData, targetIndex]);
 
     useEffect(() => {
 
@@ -76,7 +73,10 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
             setTimeout(() => {
                 const allVideos = document.querySelectorAll("video");
 
-                allVideos.forEach(async (video) => {
+                // filter videos that don't have id
+                const videos = Array.from(allVideos).filter((video) => !video.id);
+
+                videos.forEach(async (video) => {
                     video.srcObject = stream;
                     video.muted = true;
                     await video.play();
@@ -101,7 +101,7 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
                 backgroundColor: "black",
             }}
         >
-            {!selectedTarget ? (
+            {!sceneData ? (
                 <Loading />
             ) :
                 <a-scene
@@ -112,11 +112,41 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
                     vr-mode-ui="enabled: false"
                     device-orientation-permission-ui="enabled: false"
                 >
-                    <a-assets><a-asset-item
-                        id="content"
-                        src={`${FILES_URL}/${selectedTarget.content.contentFile}`}
-                    /></a-assets>
+                    <a-assets>
+                        {sceneData?.targetsAndContents?.map((target, index) => (
+                            <>
+                                {(target.content.contentType === "model/gltf-binary" ||
+                                    target.content.contentType === "application/octet-stream") && (
+                                        <a-asset-item
+                                            key={index}
+                                            id={`content${index}`}
+                                            src={getUrl(target.content.contentFile)}
+                                        />
+                                    )}
+                                {target.content.contentType.startsWith("image/") && (
+                                    <img
+                                        key={index}
+                                        id={`content${index}`}
+                                        src={getUrl(target.content.contentFile)}
+                                        style={{ display: "none" }}
+                                        alt='content'
 
+                                    />
+                                )}
+                                {target.content.contentType.startsWith("video/") && (
+                                    // eslint-disable-next-line jsx-a11y/media-has-caption
+                                    <video
+                                        key={index}
+                                        id={`content${index}`}
+                                        src={getUrl(target.content.contentFile)}
+                                        autoPlay
+                                        loop
+                                    />
+                                )}
+                            </>
+                        ))}
+                    </a-assets>
+                    <a-entity light="color: #fff; intensity: 1.5" position="0 0 1" />
                     <a-camera
                         position="0 0 0"
                         look-controls="enabled: false"
@@ -125,19 +155,39 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
                         raycaster="far: ${customFields.libVersion}; objects: .clickable"
                     />
 
-                    {targetIndex !== undefined &&
-                        // <a-entity mindar-image-target="targetIndex: 0;">
-                        <a-entity mindar-image-target={`targetIndex: ${targetIndex};`}>
-                            <a-gltf-model
-                                id="model"
-                                class="clickable"
-                                src="#content"
-                                position={`${position.x} ${position.y} ${position.z}`}
-                                scale={`${scale} ${scale} ${scale}`}
-                                rotation={`${rotation.x} ${rotation.y} ${rotation.z}`}
-                                click-node="targetNode: SunRoof"
-                            />
-                        </a-entity>
+                    {
+                        sceneData?.targetsAndContents?.map((target, index) => (
+                            <a-entity mindar-image-target={`targetIndex: ${index};`}>
+                                {(target.content.contentType === "model/gltf-binary" ||
+                                    target.content.contentType === "application/octet-stream") && (
+                                        <a-gltf-model
+                                            id="model"
+                                            src={`#${`content${index}`}`}
+                                            position={`${position.x} ${position.y} ${position.z}`}
+                                            scale={`${scale} ${scale} ${scale}`}
+                                            rotation={`${rotation.x} ${rotation.y} ${rotation.z}`}
+                                        />
+                                    )}
+                                {target.content.contentType.startsWith("image/") && (
+                                    <a-image
+                                        id="model"
+                                        src={`#${`content${index}`}`}
+                                        position={`${position.x} ${position.y} ${position.z}`}
+                                        scale={`${scale} ${scale} ${scale}`}
+                                        rotation={`${rotation.x} ${rotation.y} ${rotation.z}`}
+                                    />
+                                )}
+                                {target.content.contentType.startsWith("video/") && (
+                                    <a-video
+                                        id="model"
+                                        src={`#${`content${index}`}`}
+                                        position={`${position.x} ${position.y} ${position.z}`}
+                                        scale={`${scale} ${scale} ${scale}`}
+                                        rotation={`${rotation.x} ${rotation.y} ${rotation.z}`}
+                                    />
+                                )}
+                            </a-entity>
+                        ))
                     }
 
                 </a-scene>
@@ -147,7 +197,7 @@ export default function ModelPreview({ selectedTarget, mindFile, targetIndex, po
 }
 
 ModelPreview.propTypes = {
-    selectedTarget: PropTypes.object,
+    sceneData: PropTypes.object,
     mindFile: PropTypes.string,
     targetIndex: PropTypes.number,
     position: PropTypes.object,

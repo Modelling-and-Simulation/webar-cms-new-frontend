@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 import { Box, Container } from '@mui/material';
 
-import { useRouter } from 'src/routes/hooks';
+// import { useRouter } from 'src/routes/hooks';
 
 import useApi from 'src/hooks/useApi'
 
@@ -15,13 +15,13 @@ import ModelPreview from '../model-preview';
 import ChangeTranformationForm from '../change-tranfromation-form';
 
 export default function ChangeTranformationsView() {
-    const router = useRouter();
+    // const router = useRouter();
 
     const { getSceneById, updateSceneTransformations } = useApi()
     const { sceneId } = useParams()
 
     const [sceneData, setSceneData] = useState(null);
-    const [selectedTarget, setSelectedTarget] = useState(null);
+    // const [selectedTarget, setSelectedTarget] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
     const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
@@ -31,7 +31,7 @@ export default function ChangeTranformationsView() {
         const fetchScene = async () => {
             try {
                 const res = await getSceneById(sceneId)
-                setSelectedTarget(res.data.targetsAndContents[0]);
+                // setSelectedTarget(res.data.targetsAndContents[0]);
                 setSceneData(res.data);
             } catch (error) {
                 console.error('error', error);
@@ -46,18 +46,19 @@ export default function ChangeTranformationsView() {
     // update the scene
     const updateScene = () => {
         const updatedScene = sceneData;
-        const updatedSelectedScene = selectedTarget;
+        const updatedSelectedScene = sceneData[selectedIndex];
 
         updatedSelectedScene.position = position;
         updatedSelectedScene.rotation = rotation;
         updatedSelectedScene.scale = scale;
+        updatedSelectedScene.isTransformed = true;
 
         updatedScene.targetsAndContents[selectedIndex] = updatedSelectedScene;
 
         updateSceneTransformations(sceneId, { position, rotation, scale, selectedIndex })
             .then(() => {
                 toast.success('Scene updated successfully');
-                router.replace(`/transformations`);
+                setSceneData(updatedScene);
             })
             .catch((error) => {
                 console.error('error', error);
@@ -66,21 +67,15 @@ export default function ChangeTranformationsView() {
     }
 
     useEffect(() => {
-        if (selectedTarget?.position) {
-            setPosition(selectedTarget.position);
-        }
-        if (selectedTarget?.rotation) {
-            setRotation(selectedTarget.rotation);
-        }
-        if (selectedTarget?.scale) {
-            setScale(selectedTarget.scale);
-        }
-
-        // get the index of the selected scene
         if (!sceneData) return;
-        const index = sceneData.targetsAndContents.findIndex((target) => target._id === selectedTarget._id);
-        setSelectedIndex(index);
-    }, [sceneData, selectedTarget])
+
+        const selectedTarget = sceneData.targetsAndContents[selectedIndex];
+        
+        if (selectedTarget?.position) setPosition(selectedTarget.position);
+        if (selectedTarget?.rotation) setRotation(selectedTarget.rotation);
+        if (selectedTarget?.scale) setScale(selectedTarget.scale);
+
+    }, [sceneData, selectedIndex])
     return (
         <>
             {!sceneData ? (
@@ -110,11 +105,11 @@ export default function ChangeTranformationsView() {
                                             alignItems: 'center',
                                         }}
                                         onClick={() => {
-                                            setSelectedTarget(target);
+                                            setSelectedIndex(index);
                                         }}
                                     >
                                         {target.target.targetName}
-                                        {target.isTransformed && <Iconify icon="bitcoin-icons:verify-filled" width={40} sx={{color: "green"}} />}
+                                        {target.isTransformed && <Iconify icon="bitcoin-icons:verify-filled" width={40} sx={{ color: "green" }} />}
                                     </Box>
                                 ))
                             }
@@ -134,7 +129,8 @@ export default function ChangeTranformationsView() {
 
                         <Box width="50vw">
                             <ModelPreview
-                                selectedTarget={selectedTarget}
+                                sceneData={sceneData}
+                                // selectedTarget={selectedTarget}
                                 mindFile={sceneData.mindFile}
                                 targetIndex={selectedIndex}
                                 position={position}

@@ -21,6 +21,7 @@ import Iconify from 'src/components/iconify';
 import LinkDeleteCard from '../link-delete-card';
 import NewSceneDialog from '../new-scene-dialog';
 import { downloadImages, generateMindFile } from '../utils';
+import { error } from 'src/theme/palette';
 
 
 const STATUS_MSG = {
@@ -55,10 +56,11 @@ const EditScenePage = () =>  {
 
     const [sceneName, setSceneName] = useState('');
     const [sceneUrl, setSceneUrl] = useState('');
-    // const [index, setIndex] = useState([]);
+    const [index, setIndex] = useState(0);
     const [description, setDescription] = useState('');
 
     const [scenes, setScenes] = useState([]);
+    // const [state, setState] = useState([]);
     const [sceneEdit, setSceneEdit] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [statusMsg, setStatusMsg] = useState('');
@@ -81,35 +83,56 @@ const EditScenePage = () =>  {
         
         }
         console.log(sceneName);
-        const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
-        console.log(url);
-        if (url) setSceneUrl(url);
-        else setSceneUrl('');
         fetchData();
         // remove special characters. replace spaces with hyphen
         
     },[]);
 
+    useEffect(() => {
+        const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
+        console.log(url);
+        if (url) setSceneUrl(url);
+        else setSceneUrl('');
+    },[auth?.auth?.username, sceneName])
+
     const handleSceneEdit = () => {
         setSceneEdit(true);
     };
 
-    const handleDeleteClick = (index) => {
-        const i = index.currentTarget.getAttribute('key')
+    const handleDeleteClick = (i) => {
+        // const i = index.currentTarget.getAttribute('key');
         console.log("hi",i);
-        // setIndex(i);
+        setIndex(i);
         setShowDeleteConfirmation(true);
     };
 
     const handleDelete = () => {
+        setShowDeleteConfirmation(false);
         console.log("deleting");
         console.log(scenes);
-        // delete.
+        console.log(index);
+        // var array = [...this.state.scenes];
+        if(index != -1){
+            scenes.splice(index, 1);
+            setScenes(scenes);
+            toast.success('Link deleted successfully');
+            if(!toast.success){
+                toast.error('Error deleting link');
+                console.error('Error deleting link:', error);
+            }
+        }
+        console.log('deleted success');
+        console.log(scenes);
     }
 
     const handleAddScene = (scene) => {
         console.log("Scenes:",scenes);
         setScenes([...scenes, scene]);
+        toast.success('Link added');
+        if(!toast.success){
+            toast.error('Error adding link');
+            console.error('Error adding link:', error);
+        }
         console.log("Scenes after:",scenes);
     };
 
@@ -151,7 +174,7 @@ const EditScenePage = () =>  {
         setStatusMsg(STATUS_MSG.SAVE_SCENE);
         const formData = new FormData();
         formData.append('mindFile', mindFile);
-        formData.append('sceneName', sceneUrl);
+        formData.append('sceneName', sceneName);
         formData.append('description', description);
         formData.append('targetsAndContents', JSON.stringify(scenes.map((scene) => ({
             target: scene.target._id,
@@ -252,9 +275,9 @@ const EditScenePage = () =>  {
                             {sceneEdit === true && (
                                 <Iconify 
                                     icon="akar-icons:trash-can" 
-                                    // onClick={handleDeleteClick(this.index)}
-
-                                    onClick={handleDeleteClick()}
+                                    index={index}
+                                    onClick={() => handleDeleteClick(index)}
+                                    // onClick={getIndex(index)}
                                     sx={{ width: 25, height: 35, color:'red', cursor:'pointer' }} 
                                 />
                             )}

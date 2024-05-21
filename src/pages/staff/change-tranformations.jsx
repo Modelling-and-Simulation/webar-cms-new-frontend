@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
+import { ChangeTranformationsView } from 'src/sections/transform_corrector/view';
+
 // ----------------------------------------------------------------------
 
 export default function AllContentsPage() {
@@ -9,7 +11,7 @@ export default function AllContentsPage() {
         <title> Change Transformations </title>
       </Helmet>
 
-      <div>Change transormations</div>
+      <ChangeTranformationsView />
     </>
   );
 }

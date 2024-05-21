@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+// import { faker } from '@faker-js/faker';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -6,15 +6,15 @@ import Typography from '@mui/material/Typography';
 
 import { ASSETS_URL } from 'src/constants';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 
-import AppTasks from '../app-tasks';
-import AppNewsUpdate from '../app-news-update';
-import AppOrderTimeline from '../app-order-timeline';
+// import AppTasks from '../app-tasks';
+// import AppNewsUpdate from '../app-news-update';
+// import AppOrderTimeline from '../app-order-timeline';
 import AppCurrentVisits from '../app-current-visits';
 import AppWebsiteVisits from '../app-website-visits';
 import AppWidgetSummary from '../app-widget-summary';
-import AppTrafficBySite from '../app-traffic-by-site';
+// import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
 
@@ -30,7 +30,7 @@ export default function RegisteredUserDashboardView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
+            title="Weekly Uploads"
             total={714000}
             color="success"
             icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_bag.png`} />}
@@ -39,7 +39,7 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="New Users"
+            title="New Scenes"
             total={1352831}
             color="info"
             icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_users.png`} />}
@@ -48,7 +48,7 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Item Orders"
+            title="Uploaded Contents"
             total={1723315}
             color="warning"
             icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_buy.png`} />}
@@ -57,7 +57,7 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Bug Reports"
+            title="Uploaded Targets"
             total={234}
             color="error"
             icon={<img alt="icon" src={`${ASSETS_URL}/assets/icons/glass/ic_glass_message.png`} />}
@@ -108,13 +108,15 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Scene Visits"
             chart={{
               series: [
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'Scene 1', value: 4344 },
+                { label: 'Scene 2', value: 5435 },
+                { label: 'Scene 3', value: 1443 },
+                { label: 'Scene 4', value: 4443 },
+                { label: 'Other', value: 4443 },
+
               ],
             }}
           />
@@ -122,20 +124,15 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
+            title="Top 5 scenes"
+            // subheader="(+43%) than last year"
             chart={{
               series: [
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
+                { label: 'Scene 1', value: 400 },
+                { label: 'Scene 2', value: 430 },
+                { label: 'Scene 3', value: 448 },
+                { label: 'Scene 4', value: 470 },
+                { label: 'Scene 5', value: 540 },
               ],
             }}
           />
@@ -143,9 +140,9 @@ export default function RegisteredUserDashboardView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject
-            title="Current Subject"
+            title="Scene Usage"
             chart={{
-              categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
+              categories: ['Scene 1', 'Scene 1', 'Scene 1', 'Scene 1', 'Other', 'Math'],
               series: [
                 { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
                 { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
@@ -155,7 +152,7 @@ export default function RegisteredUserDashboardView() {
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
             title="News Update"
             list={[...Array(5)].map((_, index) => ({
@@ -166,9 +163,9 @@ export default function RegisteredUserDashboardView() {
               postedAt: faker.date.recent(),
             }))}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppOrderTimeline
             title="Order Timeline"
             list={[...Array(5)].map((_, index) => ({
@@ -184,9 +181,9 @@ export default function RegisteredUserDashboardView() {
               time: faker.date.past(),
             }))}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppTrafficBySite
             title="Traffic by Site"
             list={[
@@ -212,9 +209,9 @@ export default function RegisteredUserDashboardView() {
               },
             ]}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AppTasks
             title="Tasks"
             list={[
@@ -225,7 +222,7 @@ export default function RegisteredUserDashboardView() {
               { id: '5', name: 'Sprint Showcase' },
             ]}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

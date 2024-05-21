@@ -10,16 +10,24 @@ const useApi = () => {
   // Targets
   const getAllTargets = () => axiosPrivate.get('/targets');
   const createTarget = (data) => axiosPrivate.post('/targets', data);
+  const editTarget = (id, data) => axiosPrivate.put(`/targets/${id}`, data);
+  const deleteTarget = (id) => axiosPrivate.delete(`/targets/${id}`);
 
   // Contents
   const getAllContents = () => axiosPrivate.get('/contents');
   const createContent = (data) => axiosPrivate.post('/contents', data);
+  const editContent = (id, data) => axiosPrivate.put(`/contents/${id}`, data);
+  const deleteContent = (id) => axiosPrivate.delete(`/contents/${id}`);
 
   // Scenes
   const createScene = (data) => axiosPrivate.post('/scenes', data);
   const getAllScenes = () => axiosPrivate.get('/scenes');
+  const getScenesForTransformation = () => axiosPrivate.get('/scenes/for-transformation')
   const getSceneById = (id) => axiosPrivate.get(`/scenes/${id}`);
+  const editScene = (id, data) => axiosPrivate.put(`/scenes/name-and-description/${id}`, data);
+  const editFullScene = (id, data) => axiosPrivate.put(`/scenes/${id}`, data);
   const getSceneByUrl = (url) => axiosPublic.get(`/public/${url}`);
+  const deleteScene = (id) => axiosPrivate.delete(`/scenes/${id}`);
 
   const updateSceneTransformations = (id, data) =>
     axiosPrivate.put(`/scenes/transformation/${id}`, data);
@@ -29,10 +37,18 @@ const useApi = () => {
     logoutApi,
     getAllTargets,
     createTarget,
+    editTarget,
+    deleteTarget,
+    deleteContent,
     getAllContents,
     createContent,
+    editContent,
     createScene,
     getAllScenes,
+    editScene,
+    editFullScene,
+    deleteScene,
+    getScenesForTransformation,
     getSceneById,
     getSceneByUrl,
     updateSceneTransformations,

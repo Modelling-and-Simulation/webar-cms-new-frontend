@@ -13,6 +13,8 @@ export const IndexPage = lazy(() => import('src/pages/app'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const Page403 = lazy(() => import('src/pages/unauthorized'));
+export const ProfilePage = lazy(() => import('src/pages/profile'));
+export const TestPage = lazy(() => import('src/pages/test-page'));
 
 // Target pages
 export const AllTargetsPage = lazy(() => import('src/pages/targets/all-targets'));
@@ -25,9 +27,11 @@ export const NewContentPage = lazy(() => import('src/pages/contents/new-content'
 // Scene pages
 export const AllScenesPage = lazy(() => import('src/pages/scenes/all-scenes'));
 export const NewScenePage = lazy(() => import('src/pages/scenes/new-scene'));
+export const EditScenePage = lazy(() => import('src/pages/scenes/edit-scenes'));
 export const PublicScenePage = lazy(() => import('src/pages/scenes/public-scene'));
 
 // Staff pages
+export const ScenesForTransformationPage = lazy(() => import('src/pages/staff/scenes-for-transformaiton'));
 export const ChangeTranformationsPage = lazy(() => import('src/pages/staff/change-tranformations'));
 
 // Test pages
@@ -59,6 +63,8 @@ export default function Router() {
             </DashboardLayout>
           , children: [
             { element: <IndexPage />, index: true },
+            { path: 'profile', element: <ProfilePage /> },
+
           ]
         },
         {
@@ -84,6 +90,7 @@ export default function Router() {
               path: 'scenes', children: [
                 { element: <AllScenesPage />, index: true },
                 { path: 'new', element: <NewScenePage /> },
+                { path: 'edit/:id', element: <EditScenePage /> },
               ]
             },
           ]
@@ -94,18 +101,23 @@ export default function Router() {
             <DashboardLayout>
               <RequireAuth allowedRoles={[USER_ROLES.Staff]} />
             </DashboardLayout>
-          , children: []
+          , children: [
+            { path: 'transformations', element: <ScenesForTransformationPage /> },
+          ]
         },
         {
           // Staff user without navigation
           element: <RequireAuth allowedRoles={[USER_ROLES.Staff]} />,
-          children: [{ path: 'transformations/edit', element: <ChangeTranformationsPage /> }]
+          children: [
+            { path: 'transformations/:sceneId', element: <ChangeTranformationsPage /> },
+          ]
         },
         // path with username and scene id
         { path: ':authorName/:sceneName', element: <PublicScenePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: '404', element: <Page404 /> },
         { path: 'unauthorized', element: <Page403 /> },
+        { path: 'test', element: <TestPage /> },
         { path: '*', element: <Navigate to={`${ASSETS_URL}/404`} replace /> },
       ],
     },

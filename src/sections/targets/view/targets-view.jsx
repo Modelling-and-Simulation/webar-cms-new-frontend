@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ToastContainer } from "react-toastify";
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -19,6 +20,7 @@ import TargetCard from '../target-card';
 export default function TargetsView() {
   const router = useRouter();
 
+  const [refresh, setRefresh] = useState(false);
   const [targets, setTargets] = useState([]);
 
   const { getAllTargets } = useApi();
@@ -28,26 +30,28 @@ export default function TargetsView() {
       const response = await getAllTargets();
 
       setTargets(response.data);
-      console.log(targets);
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refresh]);
 
   const handleClickNewTarget = () => {
-    console.log("inside");
     router.push('/targets/new');
   };
 
+  const refreshContents = () => {
+    setRefresh(!refresh);
+  };
 
   return (
     <Container maxWidth>
+      <ToastContainer />
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Targets</Typography>
 
-        <Button 
-          variant="contained" 
-          color="inherit" 
+        <Button
+          variant="contained"
+          color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleClickNewTarget}
         >
@@ -57,7 +61,7 @@ export default function TargetsView() {
       <Grid container spacing={3}>
         {targets.map((target) => (
           <Grid key={target._id} xs={12} sm={6} md={3}>
-            <TargetCard target={target} />
+            <TargetCard target={target} refresh={refreshContents} />
           </Grid>
         ))}
       </Grid>

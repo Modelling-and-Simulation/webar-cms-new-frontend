@@ -9,11 +9,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-const TargetDeleteCard = ({ onClose, onDelete }) => (
+const SceneDeleteCard = ({ onClose, onDelete }) => (
   <Dialog open onClose={onClose}>
     <DialogTitle>Confirm Deletion</DialogTitle>
     <DialogContent>
-      Are you sure you want to delete this target?
+      Are you sure you want to delete this scene?
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose}>Cancel</Button>
@@ -22,9 +22,9 @@ const TargetDeleteCard = ({ onClose, onDelete }) => (
   </Dialog>
 );
 
-TargetDeleteCard.propTypes = {
+SceneDeleteCard.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
-export default TargetDeleteCard;
+export default SceneDeleteCard;

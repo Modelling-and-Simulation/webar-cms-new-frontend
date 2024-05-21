@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import "react-toastify/dist/ReactToastify.css";
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -8,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-const ContentEditCard = ({ content, onClose, onSave }) => {
+const ContentEditCard = ({ content, onClose, onConfirm }) => {
   const [editedContent, setEditedContent] = useState({ ...content });
 
   const handleChange = (e) => {
@@ -20,8 +21,7 @@ const ContentEditCard = ({ content, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    onSave(editedContent);
-    onClose();
+    onConfirm(editedContent);
   };
 
   return (
@@ -55,9 +55,9 @@ const ContentEditCard = ({ content, onClose, onSave }) => {
 };
 
 ContentEditCard.propTypes = {
-    content: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
+  content: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
 };
 
 export default ContentEditCard;

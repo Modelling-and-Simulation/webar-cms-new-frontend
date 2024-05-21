@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -12,15 +13,21 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { useRouter } from 'src/routes/hooks';
+
+import useApi from 'src/hooks/useApi';
+
 import { fDate } from 'src/utils/format-time';
 
-// import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+
+import SceneDeleteCard from './scene-delete-card';
 
 
 // ----------------------------------------------------------------------
 
 export default function SceneTableRow({
+  id,
   selected,
   name,
   description,
@@ -29,20 +36,48 @@ export default function SceneTableRow({
   updatedAt,
   views,
   handleClick,
+  // refresh
 }) {
+  const router = useRouter();
+
+  const {deleteScene} = useApi();
+
   const [open, setOpen] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmation(true);
+};
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleCloseMenu = () => {
-    setOpen(null);
+  const handleSceneEdit = () => {
+    // let id = key;
+    console.log(id);
+    router.push(`/scenes/edit/${id}`);
+    // state:{key}
+    // setOpen(null);
+  };
+
+  const handleSceneDelete = () => {
+    // setOpen(null);
+    console.log("Deleting scene..");
+    deleteScene(id)
+      .then(() => {
+        // refresh();
+        setShowDeleteConfirmation(false);
+        toast.success('Scene deleted');
+      }).catch((error) => {
+        toast.error('Error deleting scene');
+        console.error('Error deleting scene:', error);
+      });
   };
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+      <TableRow hover tabIndex={-1} role="checkbox" selected={selected} >
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
@@ -86,28 +121,36 @@ export default function SceneTableRow({
       <Popover
         open={!!open}
         anchorEl={open}
-        onClose={handleCloseMenu}
+        // onClose={handleCloseMenu}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleSceneEdit}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
+
+      {showDeleteConfirmation && (
+          <SceneDeleteCard 
+              onClose={() => setShowDeleteConfirmation(false)}
+              onDelete={handleSceneDelete}
+          />
+      )}
     </>
   );
 }
 
 SceneTableRow.propTypes = {
+  id: PropTypes.string,
   selected: PropTypes.bool,
   name: PropTypes.string,
   description: PropTypes.string,
@@ -116,4 +159,5 @@ SceneTableRow.propTypes = {
   updatedAt: PropTypes.string,
   views: PropTypes.number,
   handleClick: PropTypes.func,
+  // refresh: PropTypes.func,
 };

@@ -51,8 +51,13 @@ export default function TargetCard({ target, refresh }) {
         setShowDeleteConfirmation(false);
         toast.success('Target deleted');
       }).catch((error) => {
-        toast.error('Error deleting target');
-        console.error('Error deleting target:', error);
+        if (error?.response?.data?.message) {
+          toast.error(error.response.data.message);
+          console.log('Error deleting target:', error?.response?.data?.message);
+        } else {
+          toast.error('Error deleting target');
+          console.error('Error deleting target:', error);
+        }
       });
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ToastContainer } from "react-toastify";
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -125,6 +126,7 @@ export default function ScenePage() {
 
   return (
     <Container>
+      <ToastContainer />
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} >
         <Typography variant="h4">Scenes</Typography>
 

@@ -51,8 +51,13 @@ export default function ContentCard({ content, refresh }) {
         setShowDeleteConfirmation(false);
         toast.success('Content deleted');
       }).catch((error) => {
-        toast.error('Error deleting content');
-        console.error('Error deleting content:', error);
+        if (error?.response?.data?.message) {
+          toast.error(error.response.data.message);
+          console.log('Error deleting content:', error?.response?.data?.message);
+        } else {
+          toast.error('Error deleting content');
+          console.error('Error deleting content:', error);
+        }
       });
   };
 

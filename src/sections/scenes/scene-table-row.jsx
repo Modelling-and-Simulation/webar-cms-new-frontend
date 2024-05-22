@@ -66,7 +66,7 @@ export default function SceneTableRow({
         toast.success('Scene deleted');
       }).catch((error) => {
         toast.error('Error deleting scene');
-        console.error('Error deleting scene:', error);
+        console.error('Error deleting scene:', error.response.data.message);
       });
   };
 

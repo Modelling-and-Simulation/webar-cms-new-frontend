@@ -36,37 +36,32 @@ export default function SceneTableRow({
   updatedAt,
   views,
   handleClick,
-  // refresh
+  refresh
 }) {
   const router = useRouter();
 
-  const {deleteScene} = useApi();
+  const { deleteScene } = useApi();
 
   const [open, setOpen] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleDeleteClick = () => {
     setShowDeleteConfirmation(true);
-};
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleSceneEdit = () => {
-    // let id = key;
     console.log(id);
     router.push(`/scenes/edit/${id}`);
-    // state:{key}
-    // setOpen(null);
   };
 
   const handleSceneDelete = () => {
-    // setOpen(null);
-    console.log("Deleting scene..");
     deleteScene(id)
       .then(() => {
-        // refresh();
+        refresh();
         setShowDeleteConfirmation(false);
         toast.success('Scene deleted');
       }).catch((error) => {
@@ -121,7 +116,7 @@ export default function SceneTableRow({
       <Popover
         open={!!open}
         anchorEl={open}
-        // onClose={handleCloseMenu}
+        onClose={() => setOpen(null)}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
@@ -140,10 +135,10 @@ export default function SceneTableRow({
       </Popover>
 
       {showDeleteConfirmation && (
-          <SceneDeleteCard 
-              onClose={() => setShowDeleteConfirmation(false)}
-              onDelete={handleSceneDelete}
-          />
+        <SceneDeleteCard
+          onClose={() => setShowDeleteConfirmation(false)}
+          onDelete={handleSceneDelete}
+        />
       )}
     </>
   );
@@ -159,5 +154,5 @@ SceneTableRow.propTypes = {
   updatedAt: PropTypes.string,
   views: PropTypes.number,
   handleClick: PropTypes.func,
-  // refresh: PropTypes.func,
+  refresh: PropTypes.func,
 };

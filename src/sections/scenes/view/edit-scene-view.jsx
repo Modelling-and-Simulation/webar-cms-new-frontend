@@ -21,7 +21,6 @@ import Iconify from 'src/components/iconify';
 import LinkDeleteCard from '../link-delete-card';
 import NewSceneDialog from '../new-scene-dialog';
 import { downloadImages, generateMindFile } from '../utils';
-import { error } from 'src/theme/palette';
 
 
 const STATUS_MSG = {
@@ -43,13 +42,13 @@ const showSelectedImage = (selectedImage) => (
     />
 );
 
-const EditScenePage = () =>  {
+const EditScenePage = () => {
     // const auth = useAuth();
     const router = useRouter();
     const auth = useAuth();
 
-    const {editScene, editFullScene} = useApi();
-    const {id} = useParams();
+    const { editScene, editFullScene } = useApi();
+    const { id } = useParams();
     console.log(id);
 
     const { getSceneById } = useApi();
@@ -67,58 +66,51 @@ const EditScenePage = () =>  {
     const [isLoading, setIsLoading] = useState(false);
     const [mindFileProgress, setMindFileProgress] = useState(0);
 
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     useEffect(() => {
-        console.log("Scenes:");
-        
+        console.log('Mind file progress:', mindFileProgress);
+        console.log('Is loading:', isLoading);
+    }, [isLoading, mindFileProgress]);
+
+    useEffect(() => {
         const fetchData = async () => {
-            console.log("in");
-            console.log(id);
             const response = await getSceneById(id);
+
             setScenes(response.data.targetsAndContents);
             setSceneName(response.data.sceneName);
             setDescription(response.data.description);
-            console.log("Scenes:",scenes);
-        
         }
-        console.log(sceneName);
+
         fetchData();
-        // remove special characters. replace spaces with hyphen
-        
-    },[]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
     useEffect(() => {
         const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
         console.log(url);
         if (url) setSceneUrl(url);
         else setSceneUrl('');
-    },[auth?.auth?.username, sceneName])
+    }, [auth?.auth?.username, sceneName])
 
     const handleSceneEdit = () => {
         setSceneEdit(true);
     };
 
     const handleDeleteClick = (i) => {
-        // const i = index.currentTarget.getAttribute('key');
-        console.log("hi",i);
         setIndex(i);
         setShowDeleteConfirmation(true);
     };
 
     const handleDelete = () => {
         setShowDeleteConfirmation(false);
-        console.log("deleting");
-        console.log(scenes);
-        console.log(index);
-        // var array = [...this.state.scenes];
-        if(index != -1){
+
+        if (index !== -1) {
             scenes.splice(index, 1);
             setScenes(scenes);
             toast.success('Link deleted successfully');
-            if(!toast.success){
+            if (!toast.success) {
                 toast.error('Error deleting link');
-                console.error('Error deleting link:', error);
             }
         }
         console.log('deleted success');
@@ -126,33 +118,30 @@ const EditScenePage = () =>  {
     }
 
     const handleAddScene = (scene) => {
-        console.log("Scenes:",scenes);
         setScenes([...scenes, scene]);
         toast.success('Link added');
-        if(!toast.success){
+        if (!toast.success) {
             toast.error('Error adding link');
-            console.error('Error adding link:', error);
         }
-        console.log("Scenes after:",scenes);
     };
 
     const handleSubmit = () => {
         console.log("Edited: ");
         console.log(id);
-        if(sceneEdit === true){
+        if (sceneEdit === true) {
             handleSceneEditSubmit();
-        }else{
+        } else {
             console.log("inside sscene edit");
-            editScene(id, {sceneName, description})
-            .then(() => {
-                toast.success('Scene updated');
-                router.push('/scenes');
-            }).catch((error) => {
-              toast.error('Error editing scene');
-              console.error('Error editing scene:', error);
-            });
+            editScene(id, { sceneName, description })
+                .then(() => {
+                    toast.success('Scene updated');
+                    router.push('/scenes');
+                }).catch((error) => {
+                    toast.error('Error editing scene');
+                    console.error('Error editing scene:', error);
+                });
         }
-        
+
     };
 
     const handleSceneEditSubmit = async () => {
@@ -182,31 +171,31 @@ const EditScenePage = () =>  {
         }))));
 
         editFullScene(id, formData)
-        .then(() => {
-            toast.success('Scene updated');
-            router.push('/scenes');
-        }).catch((error) => {
-          toast.error('Error editing scene');
-          console.error('Error editing scene:', error);
-        }).finally(() => {
-            setStatusMsg('');
-            setIsLoading(false);
-        });
+            .then(() => {
+                toast.success('Scene updated');
+                router.push('/scenes');
+            }).catch((error) => {
+                toast.error('Error editing scene');
+                console.error('Error editing scene:', error);
+            }).finally(() => {
+                setStatusMsg('');
+                setIsLoading(false);
+            });
     }
 
 
-    return(
+    return (
         <Container>
-            <ToastContainer/>
+            <ToastContainer />
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                 <Typography variant="h4">Edit Scene</Typography>
-    
+
                 <Button
                     variant="contained"
                     color="inherit"
                     startIcon={<Iconify icon="typcn:tick" />}
                     onClick={handleSubmit}
-                    // disabled={scenes.length === 0 || sceneName === '' || statusMsg !== '' || isLoading}
+                // disabled={scenes.length === 0 || sceneName === '' || statusMsg !== '' || isLoading}
                 >
                     Update
                 </Button>
@@ -218,7 +207,7 @@ const EditScenePage = () =>  {
                     name="sceneName"
                     // label={sceneName}
                     onChange={(e) => setSceneName(e.target.value)}
-                    value={sceneName} 
+                    value={sceneName}
                 />
                 {sceneUrl && <Typography variant='caption' pl={1} color="green">URL: {`${auth?.auth?.username}/${sceneUrl}`}</Typography>}
                 <Typography variant='caption' pl={1}>(This name will be used in the URL)</Typography>
@@ -239,7 +228,7 @@ const EditScenePage = () =>  {
                     color="inherit"
                     startIcon={<Iconify icon="typcn:edit" />}
                     onClick={handleSceneEdit}
-                    // disabled={scenes.length === 0 || sceneName === '' || statusMsg !== '' || isLoading}
+                // disabled={scenes.length === 0 || sceneName === '' || statusMsg !== '' || isLoading}
                 >
                     Update Scenes
                 </Button>
@@ -263,37 +252,36 @@ const EditScenePage = () =>  {
             <Stack direction="row" alignItems="center" gap={5}
                 flexWrap="wrap" mt={2}>
                 {
-                    scenes.map((_scene, index) => (
-                        <Stack key={index} direction="row" alignItems="center" gap={5}
+                    scenes.map((_scene, i) => (
+                        <Stack key={i} direction="row" alignItems="center" gap={5}
                             sx={{ border: 1, borderColor: 'divider', borderRadius: 1, p: 2 }}
                         >
-                            <Typography variant="subtitle2">Scene {index + 1}</Typography>
+                            <Typography variant="subtitle2">Scene {i + 1}</Typography>
                             {showSelectedImage(_scene?.target?.targetImage)}
                             <Iconify icon="material-symbols:link" sx={{ width: 30, height: 40 }} />
                             {showSelectedImage(_scene?.content?.contentImage)}
-                            {console.log("index:",index)} 
+                            {console.log("i:", i)}
                             {sceneEdit === true && (
-                                <Iconify 
-                                    icon="akar-icons:trash-can" 
-                                    index={index}
-                                    onClick={() => handleDeleteClick(index)}
-                                    // onClick={getIndex(index)}
-                                    sx={{ width: 25, height: 35, color:'red', cursor:'pointer' }} 
+                                <Iconify
+                                    icon="akar-icons:trash-can"
+                                    index={i}
+                                    onClick={() => handleDeleteClick(i)}
+                                    sx={{ width: 25, height: 35, color: 'red', cursor: 'pointer' }}
                                 />
                             )}
                             {showDeleteConfirmation && (
-                            <LinkDeleteCard 
-                                onClose={() => setShowDeleteConfirmation(false)}
-                                onDelete={handleDelete}
-                            />
+                                <LinkDeleteCard
+                                    onClose={() => setShowDeleteConfirmation(false)}
+                                    onDelete={handleDelete}
+                                />
                             )}
                         </Stack>
-                        
+
                     ))
                 }
             </Stack>
 
-            
+
 
         </Container>
     );

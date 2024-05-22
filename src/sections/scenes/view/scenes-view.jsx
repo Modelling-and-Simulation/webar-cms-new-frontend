@@ -44,6 +44,8 @@ export default function ScenePage() {
 
   const [scenes, setScenes] = useState([]);
 
+  const [refresh, setRefresh] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +55,7 @@ export default function ScenePage() {
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refresh]);
 
   const handleClickNewScene = () => {
     router.push('/scenes/new');
@@ -115,6 +117,10 @@ export default function ScenePage() {
     filterBy: 'sceneName',
   });
 
+  const refreshContents = () => {
+    setRefresh(!refresh);
+  };
+
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
@@ -162,9 +168,7 @@ export default function ScenePage() {
               <TableBody>
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    console.log(row._id);
-                    return (
+                  .map((row) => (
                     <SceneTableRow
                       key={row._id}
                       id={row._id}
@@ -176,8 +180,9 @@ export default function ScenePage() {
                       views={row.views}
                       selected={selected.indexOf(row.sceneName) !== -1}
                       handleClick={(event) => handleClick(event, row.sceneName)}
+                      refresh={refreshContents}
                     />
-                  )})}
+                  ))}
                 <TableEmptyRows
                   height={77}
                   emptyRows={emptyRows(page, rowsPerPage, scenes.length)}

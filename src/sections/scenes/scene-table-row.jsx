@@ -16,6 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'src/routes/hooks';
 
 import useApi from 'src/hooks/useApi';
+import useAuth from 'src/hooks/useAuth';
 
 import { fDate } from 'src/utils/format-time';
 
@@ -39,6 +40,7 @@ export default function SceneTableRow({
   refresh
 }) {
   const router = useRouter();
+  const auth = useAuth();
 
   const { deleteScene } = useApi();
 
@@ -54,8 +56,11 @@ export default function SceneTableRow({
   };
 
   const handleSceneEdit = () => {
-    console.log(id);
     router.push(`/scenes/edit/${id}`);
+  };
+
+  const handleSceneView = () => {
+    router.push(`/${auth?.auth?.username}/${name}`);
   };
 
   const handleSceneDelete = () => {
@@ -72,7 +77,7 @@ export default function SceneTableRow({
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected} >
+      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
@@ -123,6 +128,11 @@ export default function SceneTableRow({
           sx: { width: 140 },
         }}
       >
+        <MenuItem onClick={handleSceneView}>
+          <Iconify icon="mdi:eye" sx={{ mr: 2 }} />
+          View
+        </MenuItem>
+
         <MenuItem onClick={handleSceneEdit}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit

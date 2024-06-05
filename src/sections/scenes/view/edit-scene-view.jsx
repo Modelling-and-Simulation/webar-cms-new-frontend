@@ -14,6 +14,8 @@ import { useRouter } from 'src/routes/hooks';
 import useApi from 'src/hooks/useApi';
 import useAuth from "src/hooks/useAuth";
 
+import formatSceneUrl from 'src/utils/format-scene-url';
+
 import { FILES_URL } from 'src/constants';
 
 import Iconify from 'src/components/iconify';
@@ -49,7 +51,6 @@ const EditScenePage = () => {
 
     const { editScene, editFullScene } = useApi();
     const { id } = useParams();
-    console.log(id);
 
     const { getSceneById } = useApi();
 
@@ -87,8 +88,8 @@ const EditScenePage = () => {
     }, [id]);
 
     useEffect(() => {
-        const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
-        console.log(url);
+        const url = formatSceneUrl(sceneName);
+
         if (url) setSceneUrl(url);
         else setSceneUrl('');
     }, [auth?.auth?.username, sceneName])

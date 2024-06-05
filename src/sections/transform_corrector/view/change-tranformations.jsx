@@ -46,7 +46,7 @@ export default function ChangeTranformationsView() {
     // update the scene
     const updateScene = () => {
         const updatedScene = sceneData;
-        const updatedSelectedScene = sceneData[selectedIndex];
+        const updatedSelectedScene = sceneData.targetsAndContents[selectedIndex];
 
         updatedSelectedScene.position = position;
         updatedSelectedScene.rotation = rotation;

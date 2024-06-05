@@ -17,8 +17,20 @@ export default function ModelPreview({ sceneData, mindFile, targetIndex, positio
     const [stream, setStream] = useState(null);
     const [isFirstRender, setIsFirstRender] = useState(true);
     const [isFirstCamera, setIsFirstCamera] = useState(true);
+    const [cameraPermission, setCameraPermission] = useState(false);
 
     const getUrl = (filePath) => `${FILES_URL}/${filePath}`
+
+    useEffect(() => {
+        // check if the browser supports camera access
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(() => {
+                setCameraPermission(true);
+            })
+            .catch(() => {
+                setCameraPermission(false);
+            });
+    }, []);
 
     useEffect(() => {
         if (!sceneData) return;
@@ -45,7 +57,7 @@ export default function ModelPreview({ sceneData, mindFile, targetIndex, positio
 
             setStream(canvas.captureStream());
         };
-    }, [sceneData, targetIndex]);
+    }, [sceneData, targetIndex, cameraPermission]);
 
     useEffect(() => {
 

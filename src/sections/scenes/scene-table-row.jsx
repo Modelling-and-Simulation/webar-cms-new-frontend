@@ -16,6 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'src/routes/hooks';
 
 import useApi from 'src/hooks/useApi';
+import useAuth from 'src/hooks/useAuth';
 
 import { fDate } from 'src/utils/format-time';
 
@@ -36,48 +37,47 @@ export default function SceneTableRow({
   updatedAt,
   views,
   handleClick,
-  // refresh
+  refresh
 }) {
   const router = useRouter();
+  const auth = useAuth();
 
-  const {deleteScene} = useApi();
+  const { deleteScene } = useApi();
 
   const [open, setOpen] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleDeleteClick = () => {
     setShowDeleteConfirmation(true);
-};
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleSceneEdit = () => {
-    // let id = key;
-    console.log(id);
     router.push(`/scenes/edit/${id}`);
-    // state:{key}
-    // setOpen(null);
+  };
+
+  const handleSceneView = () => {
+    router.push(`/${auth?.auth?.username}/${name}`);
   };
 
   const handleSceneDelete = () => {
-    // setOpen(null);
-    console.log("Deleting scene..");
     deleteScene(id)
       .then(() => {
-        // refresh();
+        refresh();
         setShowDeleteConfirmation(false);
         toast.success('Scene deleted');
       }).catch((error) => {
         toast.error('Error deleting scene');
-        console.error('Error deleting scene:', error);
+        console.error('Error deleting scene:', error.response.data.message);
       });
   };
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected} >
+      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
@@ -121,13 +121,18 @@ export default function SceneTableRow({
       <Popover
         open={!!open}
         anchorEl={open}
-        // onClose={handleCloseMenu}
+        onClose={() => setOpen(null)}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
           sx: { width: 140 },
         }}
       >
+        <MenuItem onClick={handleSceneView}>
+          <Iconify icon="mdi:eye" sx={{ mr: 2 }} />
+          View
+        </MenuItem>
+
         <MenuItem onClick={handleSceneEdit}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
@@ -140,10 +145,10 @@ export default function SceneTableRow({
       </Popover>
 
       {showDeleteConfirmation && (
-          <SceneDeleteCard 
-              onClose={() => setShowDeleteConfirmation(false)}
-              onDelete={handleSceneDelete}
-          />
+        <SceneDeleteCard
+          onClose={() => setShowDeleteConfirmation(false)}
+          onDelete={handleSceneDelete}
+        />
       )}
     </>
   );
@@ -159,5 +164,5 @@ SceneTableRow.propTypes = {
   updatedAt: PropTypes.string,
   views: PropTypes.number,
   handleClick: PropTypes.func,
-  // refresh: PropTypes.func,
+  refresh: PropTypes.func,
 };

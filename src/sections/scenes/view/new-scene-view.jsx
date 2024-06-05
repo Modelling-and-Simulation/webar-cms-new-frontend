@@ -14,6 +14,8 @@ import { useRouter } from 'src/routes/hooks';
 import useApi from 'src/hooks/useApi';
 import useAuth from "src/hooks/useAuth";
 
+import formatSceneUrl from 'src/utils/format-scene-url';
+
 import { FILES_URL } from 'src/constants';
 
 import Iconify from 'src/components/iconify';
@@ -73,7 +75,7 @@ const NewScenePage = () => {
 
     useEffect(() => {
         // remove special characters. replace spaces with hyphen
-        const url = sceneName.trim().replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase();
+        const url = formatSceneUrl(sceneName);
         if (url) setSceneUrl(url);
         else setSceneUrl('');
     }, [auth?.auth?.username, sceneName]);
@@ -88,7 +90,7 @@ const NewScenePage = () => {
 
         // Generate mind file
         setStatusMsg(STATUS_MSG.GENERATE_MIND_FILE);
-        console.log('Scenes', scenes);
+        
         const imageFiles = await downloadImages(
             scenes.map((scene) => scene.target.targetImage)
         );
